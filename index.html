@@ -335,6 +335,13 @@ body.anim-mid .motifs .m:nth-child(2n){display:none}
   box-shadow: 0 4px 10px rgba(255,61,139,.4);
 }
 
+/* ========= Static Note card internals ========= */
+.note-thumb{width:100%;aspect-ratio:16/9;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(255,255,255,.05)}
+.note-thumb img{width:100%;height:100%;object-fit:cover}
+.note-info{padding:10px 12px}
+.note-title{font-size:11px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.note-date{font-size:10px;opacity:.4;margin-top:6px}
+
 .note-skel{background:var(--card);border:1px solid var(--card-b);border-radius:18px;overflow:hidden}
 .note-skel .thumb{aspect-ratio:16/9;background:linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.1), rgba(255,255,255,.04));background-size:200% 100%;animation:shimmer 1.4s linear infinite}
 .note-skel .body{padding:16px}
@@ -734,8 +741,51 @@ body.theme-retro .hero-text h1, body.theme-retro .sec-title, body.theme-retro .p
       <a class="sec-link" href="https://note.com/nachiko0215" target="_blank" rel="noopener">すべて見る →</a>
     </div>
 
-    <div class="note-grid" id="note-grid">
-      <!-- skeletons injected by JS -->
+    <div class="note-grid">
+<!-- NOTE_ARTICLES_START -->
+<a class="note-card" href="https://note.com/nachiko0215/n/n72a47a53976e" target="_blank">
+  <div class="note-thumb"><img src="https://assets.st-note.com/production/uploads/images/254642889/rectangle_large_type_2_ff9ff416371603b0d37cda4bc7afed3e.png" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'"></div>
+  <div class="note-info">
+    <div class="note-title">【体験レポ】仮面をつけた瞬間から始まる異世界茶会｜花宵の大茶会｜北野天満宮【京都】</div>
+    <div class="note-date">2026.04.18</div>
+  </div>
+</a>
+<a class="note-card" href="https://note.com/nachiko0215/n/n0a422a7343e6" target="_blank">
+  <div class="note-thumb"><img src="https://assets.st-note.com/production/uploads/images/252015415/rectangle_large_type_2_0f24c3983d98db1a16d52af10754382a.png" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'"></div>
+  <div class="note-info">
+    <div class="note-title">【体験レポ】360°花嫁道中で江戸の街に入り込む半日体験｜太秦映画村【京都】</div>
+    <div class="note-date">2026.03.29</div>
+  </div>
+</a>
+<a class="note-card" href="https://note.com/nachiko0215/n/n79a107385962" target="_blank">
+  <div class="note-thumb"><img src="https://assets.st-note.com/production/uploads/images/251847149/rectangle_large_type_2_d856eee84487c155bade26375e19035f.png" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'"></div>
+  <div class="note-info">
+    <div class="note-title">【VR体験レポ】自分の足で歩き回れる異世界から始まる発見｜イマーシブジャーニー『印象派画家と過ごす夜』【横浜】</div>
+    <div class="note-date">2026.03.27</div>
+  </div>
+</a>
+<a class="note-card" href="https://note.com/nachiko0215/n/n25d5b25be25e" target="_blank">
+  <div class="note-thumb"><img src="https://assets.st-note.com/production/uploads/images/251870827/rectangle_large_type_2_046da5f583f1959d2feb1ed1f19855f5.png" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'"></div>
+  <div class="note-info">
+    <div class="note-title">【体験レポ】爆弾を外して生き残れ！今際の国のアリス｜イマーシブ・フォート東京【お台場】</div>
+    <div class="note-date">2026.03.22</div>
+  </div>
+</a>
+<a class="note-card" href="https://note.com/nachiko0215/n/ne24e7c62a8aa" target="_blank">
+  <div class="note-thumb"><img src="https://assets.st-note.com/production/uploads/images/251847149/rectangle_large_type_2_d856eee84487c155bade26375e19035f.png" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'"></div>
+  <div class="note-info">
+    <div class="note-title">歩いて、触れて、没入する『チームラボ バイオヴォルテックス京都』</div>
+    <div class="note-date">2026.02.19</div>
+  </div>
+</a>
+<a class="note-card" href="https://note.com/nachiko0215/n/n5c70f591d155" target="_blank">
+  <div class="note-thumb"><img src="https://assets.st-note.com/production/uploads/images/253931980/rectangle_large_type_2_962ac8a0aa96262f66682771a46b34a8.png" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'"></div>
+  <div class="note-info">
+    <div class="note-title">【体験レポ】クリムト絵画に包まれる没入体験｜THE MOVEUM YOKOHAMA 美の黄金時代【横浜】</div>
+    <div class="note-date">2026.02.24</div>
+  </div>
+</a>
+<!-- NOTE_ARTICLES_END -->
     </div>
   </section>
 
@@ -931,7 +981,7 @@ function fmtDate(d){
 }
 
 function renderNotes(items){
-  const grid=document.getElementById('note-grid'); grid.innerHTML='';
+  const grid=document.getElementById('note-grid'); if(!grid) return; grid.innerHTML='';
   items.slice(0,6).forEach((n,i)=>{
     const a=document.createElement('a');
     a.href = n.noteUrl || ("https://note.com/nachiko0215/n/"+(n.key||""));
@@ -954,7 +1004,7 @@ function renderNotes(items){
 }
 
 function skeletons(){
-  const grid=document.getElementById('note-grid'); grid.innerHTML='';
+  const grid=document.getElementById('note-grid'); if(!grid) return; grid.innerHTML='';
   for(let i=0;i<6;i++){
     const d=document.createElement('div'); d.className='note-skel';
     d.innerHTML=`<div class="thumb"></div><div class="body"><div class="line w70"></div><div class="line w90"></div><div class="line w70"></div></div>`;
