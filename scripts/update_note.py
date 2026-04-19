@@ -33,7 +33,8 @@ def build_card(article: dict) -> str:
 
     # サムネイル取得（eyecatch → key_visual → fallback）
     thumb = (
-        article.get("eyecatchUrl")
+        article.get("eyecatch")
+        or article.get("eyecatchUrl")
         or article.get("key_visual_url")
         or ""
     )
