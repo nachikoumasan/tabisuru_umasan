@@ -99,6 +99,129 @@
   }
   @keyframes twinkle { from { opacity: 0.3; } to { opacity: 0.7; } }
 
+  /* Magical particles canvas — fixed full-viewport, behind content */
+  .magic-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+  /* Floating glow orbs (CSS-driven) */
+  .magic-orbs {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .magic-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.55;
+    mix-blend-mode: screen;
+    will-change: transform;
+  }
+  .magic-orb--1 {
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(255,210,63,0.6), rgba(255,210,63,0) 70%);
+    top: 10%; left: -10%;
+    animation: orb-drift-a 22s ease-in-out infinite alternate;
+  }
+  .magic-orb--2 {
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(107,75,214,0.7), rgba(107,75,214,0) 70%);
+    top: 50%; right: -15%;
+    animation: orb-drift-b 28s ease-in-out infinite alternate;
+  }
+  .magic-orb--3 {
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(255,139,61,0.5), rgba(255,139,61,0) 70%);
+    bottom: 5%; left: 30%;
+    animation: orb-drift-c 26s ease-in-out infinite alternate;
+  }
+  @keyframes orb-drift-a {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(80px, 60px) scale(1.15); }
+    100% { transform: translate(160px, -40px) scale(0.95); }
+  }
+  @keyframes orb-drift-b {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(-100px, -80px) scale(1.1); }
+    100% { transform: translate(-60px, 80px) scale(0.9); }
+  }
+  @keyframes orb-drift-c {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(60px, -60px) scale(1.2); }
+    100% { transform: translate(-80px, -40px) scale(1); }
+  }
+
+  /* Sparkle particles (CSS only — light layer on top of canvas) */
+  .magic-sparkles {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .magic-sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #ffd23f;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 2px rgba(255,210,63,0.9), 0 0 16px 4px rgba(255,210,63,0.5);
+    opacity: 0;
+    animation: sparkle-rise linear infinite;
+  }
+  .magic-sparkle::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: inherit;
+    border-radius: inherit;
+    transform: rotate(45deg);
+    box-shadow: inherit;
+  }
+  @keyframes sparkle-rise {
+    0%   { transform: translate(0, 0) scale(0); opacity: 0; }
+    10%  { opacity: 1; transform: translate(8px, -40px) scale(1); }
+    50%  { opacity: 0.9; transform: translate(-12px, -200px) scale(0.85); }
+    90%  { opacity: 0.4; }
+    100% { transform: translate(20px, -420px) scale(0); opacity: 0; }
+  }
+
+  /* Aurora ribbon — slow shifting nebula */
+  .magic-aurora {
+    position: fixed;
+    inset: -10% -10% -10% -10%;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      conic-gradient(from 0deg at 30% 40%,
+        rgba(107,75,214,0) 0deg,
+        rgba(255,210,63,0.18) 60deg,
+        rgba(107,75,214,0.22) 140deg,
+        rgba(255,139,61,0.18) 220deg,
+        rgba(107,75,214,0) 360deg);
+    filter: blur(80px);
+    opacity: 0.55;
+    animation: aurora-spin 60s linear infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes aurora-spin {
+    from { transform: rotate(0deg) scale(1.1); }
+    to   { transform: rotate(360deg) scale(1.1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .magic-orb, .magic-sparkle, .magic-aurora { animation: none !important; }
+    .magic-canvas { display: none; }
+  }
+
   .shell {
     width: 100%;
     max-width: 480px;
@@ -160,15 +283,6 @@
     color: var(--sun);
   }
 
-  .hero__identity {
-    margin-top: -42px;
-    position: relative;
-    padding: 0 4px;
-    display: flex;
-    align-items: flex-end;
-    gap: 14px;
-    z-index: 2;
-  }
   .hero__avatar {
     width: 88px;
     height: 88px;
@@ -204,6 +318,47 @@
     letter-spacing: 0.08em;
   }
 
+  /* Mobile: avatar + description on the LEFT, name/handle on the RIGHT */
+  .hero__tagline--standalone { display: none; }
+  .hero__tagline--inline { display: none; } /* PC variant — hidden on mobile */
+  .sns:not(.sns--inline) { display: none; }
+  .sns--inline { display: none; }
+
+  .hero__identity {
+    margin-top: -42px;
+    position: relative;
+    padding: 0 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    z-index: 2;
+  }
+  .hero__avatar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+    width: 130px;
+    max-width: 40%;
+  }
+  .hero__identity-text {
+    padding-top: 44px;
+    flex: 1;
+    min-width: 0;
+  }
+  .hero__tagline--under-avatar {
+    margin: 0;
+    width: 100%;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--paper);
+    border-left: 2px solid var(--sun);
+    padding: 1px 0 1px 8px;
+    text-align: left;
+  }
+  .hero__tagline--under-avatar strong { color: var(--sun); font-weight: 700; }
+  .hero__tagline--under-avatar br { display: none; }
   .hero__tagline {
     margin: 16px 4px 18px;
     font-size: 14px;
@@ -736,18 +891,402 @@
   }
 
   /* =========================================================
-     Tablet/desktop tweaks
+     Tablet (≥600px): widen mobile layout
      ========================================================= */
   @media (min-width: 600px) {
-    .shell { max-width: 560px; padding: 0 20px 80px; }
-    .hero { margin: 0 -20px 0; }
-    .hero__avatar { width: 100px; height: 100px; flex-basis: 100px; }
+    .shell { max-width: 620px; padding: 0 24px 80px; }
+    .hero { margin: 0 -24px 0; }
+    .hero__avatar { width: 104px; height: 104px; flex-basis: 104px; }
     .hero__name { font-size: 26px; }
     .section__title { font-size: 20px; }
     .stamps { grid-template-columns: repeat(4, 1fr); }
-    .article-card__thumb { width: 120px; height: 120px; flex-basis: 120px; }
-    .article-card { grid-template-columns: 120px 1fr; }
+    .article-card__thumb { width: 128px; height: 128px; flex-basis: 128px; }
+    .article-card { grid-template-columns: 128px 1fr; }
     .article-card__title { font-size: 14.5px; }
+    .articles { grid-template-columns: 1fr 1fr; }
+    .articles-actions { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
+  }
+
+  /* =========================================================
+     PC-only hero banner (top of content column on desktop)
+     ========================================================= */
+  .pc-hero { display: none; }
+
+  @media (min-width: 960px) {
+    .pc-hero {
+      display: block;
+      grid-column: 2;
+      grid-row: 1;
+      position: relative;
+      margin: 0 0 32px;
+      border-radius: 24px;
+      padding: 32px 32px 0;
+      background:
+        radial-gradient(120% 80% at 100% 0%, rgba(255,210,63,0.16), transparent 60%),
+        radial-gradient(80% 60% at 0% 100%, rgba(255,139,61,0.18), transparent 65%),
+        linear-gradient(160deg, #2a1262 0%, #3a1d7a 50%, #2c1454 100%);
+      border: 1px solid rgba(255,210,63,0.28);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .pc-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 12% 18%, #ffd23f 99%, transparent 100%),
+        radial-gradient(1px 1px at 28% 62%, #fff 99%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 70% 22%, #fff 99%, transparent 100%),
+        radial-gradient(1px 1px at 60% 80%, #ffd23f 99%, transparent 100%),
+        radial-gradient(1px 1px at 88% 50%, #fff 99%, transparent 100%);
+      pointer-events: none;
+      opacity: 0.7;
+    }
+    .pc-hero::after {
+      content: "✦";
+      position: absolute;
+      top: 22px;
+      right: 28px;
+      font-size: 28px;
+      color: var(--sun);
+      opacity: 0.8;
+      animation: twinkle 3s ease-in-out infinite alternate;
+    }
+    .pc-hero__grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding-bottom: 28px;
+    }
+    .pc-hero__eyebrow {
+      font-family: "DotGothic16", monospace;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      color: var(--sun);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .pc-hero__pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--ember);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--ember), 0 0 0 0 rgba(255,139,61,0.6);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px var(--ember), 0 0 0 0 rgba(255,139,61,0.6); }
+      50% { box-shadow: 0 0 14px var(--ember), 0 0 0 8px rgba(255,139,61,0); }
+    }
+    .pc-hero__headline {
+      font-family: "RocknRoll One", "Zen Kaku Gothic New", sans-serif;
+      font-weight: 400;
+      font-size: 38px;
+      line-height: 1.2;
+      margin: 0 0 16px;
+      color: #fff;
+      letter-spacing: 0.01em;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.35);
+    }
+    .pc-hero__headline em {
+      font-style: normal;
+      color: var(--sun);
+      background: linear-gradient(180deg, var(--sun) 0%, var(--ember) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .pc-hero__lead {
+      color: var(--paper);
+      font-size: 14px;
+      line-height: 1.8;
+      margin: 0 0 22px;
+      max-width: 56ch;
+    }
+    .pc-hero__cta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pc-hero__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 11px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      transition: transform 0.15s ease, filter 0.15s ease, background 0.15s ease;
+    }
+    .pc-hero__btn:hover { transform: translateY(-1px); }
+    .pc-hero__btn--primary {
+      background: linear-gradient(180deg, var(--sun) 0%, var(--ember) 100%);
+      color: #2a1262;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.35);
+    }
+    .pc-hero__btn--primary:hover { filter: brightness(1.05); }
+    .pc-hero__btn--ghost {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+    .pc-hero__btn--ghost:hover { background: rgba(255,255,255,0.15); border-color: var(--sun); }
+
+    .pc-hero__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-top: 1px dashed rgba(255,210,63,0.28);
+      padding-top: 18px;
+    }
+    .pc-hero__stat {
+      text-align: left;
+      padding: 0 4px;
+      border-right: 1px dashed rgba(255,210,63,0.18);
+    }
+    .pc-hero__stat:last-child { border-right: none; }
+    .pc-hero__stat-num {
+      font-family: "RocknRoll One", sans-serif;
+      font-size: 26px;
+      color: var(--sun);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .pc-hero__stat-label {
+      font-size: 11px;
+      color: var(--paper-dim);
+      letter-spacing: 0.06em;
+    }
+
+    .pc-hero__marquee {
+      position: relative;
+      margin: 0 -32px;
+      padding: 10px 0;
+      background: rgba(11, 8, 32, 0.55);
+      border-top: 1px solid rgba(255,210,63,0.28);
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+    }
+    .pc-hero__marquee-track {
+      display: inline-flex;
+      gap: 32px;
+      white-space: nowrap;
+      animation: marquee 28s linear infinite;
+      will-change: transform;
+      font-family: "DotGothic16", monospace;
+      color: var(--sun);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+    }
+    .pc-hero__marquee-track span { padding: 0 8px; opacity: 0.85; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pc-hero__marquee-track { animation: none; }
+      .pc-hero__pulse { animation: none; }
+      .pc-hero::after { animation: none; }
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .pc-hero { padding: 40px 40px 0; }
+    .pc-hero__grid {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: end;
+      padding-bottom: 32px;
+    }
+    .pc-hero__headline { font-size: 44px; }
+    .pc-hero__stats {
+      grid-template-columns: 1fr;
+      border-top: none;
+      border-left: 1px dashed rgba(255,210,63,0.28);
+      padding: 6px 0 6px 24px;
+      gap: 18px;
+    }
+    .pc-hero__stat {
+      border-right: none;
+      border-bottom: 1px dashed rgba(255,210,63,0.14);
+      padding-bottom: 14px;
+    }
+    .pc-hero__stat:last-child { border-bottom: none; padding-bottom: 0; }
+    .pc-hero__marquee { margin: 0 -40px; }
+  }
+
+  /* =========================================================
+     Desktop (≥960px): 2-column shell
+     - left: sticky profile (hero + identity + tagline + sns)
+     - right: content sections
+     ========================================================= */
+  @media (min-width: 960px) {
+    body { font-size: 16px; }
+
+    .shell {
+      max-width: 1120px;
+      padding: 32px 40px 96px;
+      display: grid;
+      grid-template-columns: minmax(320px, 380px) 1fr;
+      column-gap: 56px;
+      row-gap: 32px;
+      align-items: start;
+    }
+
+    /* HEADER: full-width banner across BOTH columns */
+    .hero {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      margin: 0;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero__img-wrap {
+      aspect-ratio: 21 / 8;
+      border-radius: 24px;
+    }
+    .hero__img-wrap img {
+      object-position: center 35%;
+    }
+    .hero__img-wrap::after {
+      background: linear-gradient(180deg, rgba(11,8,32,0) 40%, rgba(11,8,32,0.5) 100%);
+    }
+    .hero__badge {
+      left: 28px;
+      top: 24px;
+      font-size: 12px;
+      padding: 7px 14px;
+    }
+
+    /* LEFT COLUMN: identity + tagline + sns (sticky profile card) */
+    .hero__identity,
+    .hero__tagline,
+    .sns {
+      grid-column: 1;
+    }
+    .hero__identity {
+      grid-row: 2;
+      margin-top: -52px;
+      margin-bottom: 0;
+      padding: 0 4px;
+      z-index: 3;
+      align-items: flex-start;
+    }
+    .hero__identity-text {
+      flex: 1;
+      min-width: 0;
+      padding-top: 50px;
+    }
+    /* PC: avatar-col collapses back to just the avatar; hide under-avatar tagline */
+    .hero__avatar-col {
+      display: contents;
+    }
+    .hero__tagline--under-avatar {
+      display: none;
+    }
+    /* PC: show inline tagline, hide standalone */
+    .hero__tagline--inline {
+      display: block;
+      margin: 10px 0 0;
+      padding: 2px 0 2px 12px;
+      font-size: 13px;
+      line-height: 1.55;
+      border-left: 3px solid var(--sun);
+    }
+    .hero__tagline--standalone {
+      display: none;
+    }
+    .sns {
+      grid-row: 4;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 0;
+      align-self: start;
+      position: sticky;
+      top: 32px;
+      display: none; /* PC: hide standalone, show inline instead */
+    }
+    /* Inline SNS sits inside identity-text, right under tagline */
+    .sns--inline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 14px 0 0;
+    }
+    .sns--inline .sns__btn {
+      padding: 9px 10px;
+      min-height: 46px;
+      font-size: 12px;
+    }
+    .sns--inline .sns__icon {
+      width: 26px;
+      height: 26px;
+      flex-basis: 26px;
+      border-radius: 7px;
+    }
+    .sns--inline .sns__label small { font-size: 9px; }
+    .hero__avatar { width: 100px; height: 100px; flex-basis: 100px; }
+    .hero__name { font-size: 28px; }
+
+    /* RIGHT COLUMN: sections start at row 2 (right of identity) */
+    .section {
+      grid-column: 2;
+      margin: 0 0 40px;
+    }
+    .section:nth-of-type(1) { grid-row: 2; }
+    .section:nth-of-type(2) { grid-row: 3; }
+    .section:nth-of-type(3) { grid-row: 4; }
+    .section:last-of-type { margin-bottom: 0; }
+
+    .section__title { font-size: 22px; }
+    .section__sub { font-size: 13.5px; }
+
+    /* Articles: 2-up grid */
+    .articles { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .article-card { grid-template-columns: 120px 1fr; }
+    .article-card__thumb { width: 120px; height: 120px; flex-basis: 120px; }
+    .articles-actions {
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Quest card: roomier */
+    .quest-card { padding: 24px; }
+    .quest-scroll__text { font-size: 18px; }
+    .quest-actions { grid-template-columns: 1fr 1fr; }
+
+    /* Stamps: 4-up always on desktop */
+    .stamps { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+    .foot { grid-column: 1 / -1; margin-top: 40px; }
+  }
+
+  /* =========================================================
+     Wide desktop (≥1280px): more breathing room
+     ========================================================= */
+  @media (min-width: 1280px) {
+    .shell {
+      max-width: 1280px;
+      grid-template-columns: 400px 1fr;
+      gap: 72px;
+      padding: 40px 56px 120px;
+    }
+    .section__title { font-size: 24px; }
+    .article-card__title { font-size: 15px; }
+    .quest-scroll__text { font-size: 20px; }
+  }
+
+  /* Reduced motion: disable parallax/twinkle */
+  @media (prefers-reduced-motion: reduce) {
+    body::after { animation: none; }
+    .section, .hero__identity, .hero__tagline, .sns {
+      transition: none !important;
+    }
   }
 
   /* Loading state */
@@ -764,6 +1303,15 @@
 </head>
 <body>
 
+<div class="magic-aurora" aria-hidden="true"></div>
+<div class="magic-orbs" aria-hidden="true">
+  <div class="magic-orb magic-orb--1"></div>
+  <div class="magic-orb magic-orb--2"></div>
+  <div class="magic-orb magic-orb--3"></div>
+</div>
+<canvas class="magic-canvas" id="magicCanvas" aria-hidden="true"></canvas>
+<div class="magic-sparkles" id="magicSparkles" aria-hidden="true"></div>
+
 <main class="shell">
 
   <!-- ============ [1] HEADER ============ -->
@@ -777,18 +1325,54 @@
   </header>
 
   <div class="hero__identity">
-    <div class="hero__avatar">
-      <img src="https://nachikoumasan.github.io/tabisuru_umasan/uploads/icon_image-1776587159055.jpg"
-           alt="旅するうまさん アイコン"
-           onerror="this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;display:grid;place-items:center;background:linear-gradient(135deg,#6b4bd6,#ff8b3d);font-family:RocknRoll One,sans-serif;font-size:36px;color:#fff;&quot;>馬</div>'" />
+    <div class="hero__avatar-col">
+      <div class="hero__avatar">
+        <img src="https://nachikoumasan.github.io/tabisuru_umasan/uploads/icon_image-1776587159055.jpg"
+             alt="旅するうまさん アイコン"
+             onerror="this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;display:grid;place-items:center;background:linear-gradient(135deg,#6b4bd6,#ff8b3d);font-family:RocknRoll One,sans-serif;font-size:36px;color:#fff;&quot;>馬</div>'" />
+      </div>
+      <p class="hero__tagline hero__tagline--under-avatar">
+        <strong>謎解き・ARG・没入型アート。</strong><br />
+        物語への扉を案内します。
+      </p>
     </div>
-    <div>
+    <div class="hero__identity-text">
       <h1 class="hero__name">旅する<em>うまさん</em></h1>
       <div class="hero__handle">@nachiko0215</div>
+      <p class="hero__tagline hero__tagline--inline">
+        <strong>謎解き・ARG・没入型アート。</strong><br />
+        物語への扉を案内します。
+      </p>
+      <nav class="sns sns--inline" aria-label="SNSリンク">
+        <a class="sns__btn sns__btn--note" href="https://note.com/nachiko0215" target="_blank" rel="noopener">
+          <span class="sns__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><text x="12" y="16" text-anchor="middle" font-size="13" font-weight="800" fill="#fff" font-family="sans-serif">n</text></svg>
+          </span>
+          <span class="sns__label">note<small>記事を読む</small></span>
+        </a>
+        <a class="sns__btn sns__btn--x" href="https://twitter.com/nachiko0215" target="_blank" rel="noopener">
+          <span class="sns__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+          </span>
+          <span class="sns__label">X (Twitter)<small>うまさん本人</small></span>
+        </a>
+        <a class="sns__btn sns__btn--quest" href="https://twitter.com/umasan_quest" target="_blank" rel="noopener">
+          <span class="sns__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.39 5.42L20 8.24l-4 3.9.95 5.55L12 15.1l-4.95 2.6L8 12.14l-4-3.9 5.61-.82L12 2z"/></svg>
+          </span>
+          <span class="sns__label">挑戦状<small>クエスト配信中</small></span>
+        </a>
+        <a class="sns__btn sns__btn--goods" href="https://suzuri.jp/nachiko0215" target="_blank" rel="noopener">
+          <span class="sns__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6 2h12l1.5 4.5h-15L6 2zm-2 6h16v14H4V8zm4 4v6h2v-6H8zm6 0v6h2v-6h-2z"/></svg>
+          </span>
+          <span class="sns__label">グッズ<small>SUZURIストア</small></span>
+        </a>
+      </nav>
     </div>
   </div>
 
-  <p class="hero__tagline">
+  <p class="hero__tagline hero__tagline--standalone">
     <strong>謎解き・ARG・没入型アート。</strong><br />
     物語への扉を案内します。
   </p>
@@ -823,68 +1407,44 @@
   <!-- ============ [2] NOTE 記事 ============ -->
   <section class="section" aria-labelledby="sec-articles">
     <div class="section__head">
-      <span class="section__num">02 / NEWS</span>
+      <span class="section__num">01 / NEWS</span>
     </div>
     <h2 class="section__title" id="sec-articles">最近の<em>体験型イベント</em>情報</h2>
-    <p class="section__sub">うまさんが体験してきた謎解き・ARG・没入型アートのレポートを、note最新記事から自動でお届け。</p>
+    <p class="section__sub" style="margin: 0px 2px">うまさんが体験してきた謎解き・ARG・没入型アートのレポートを、note最新記事から自動でお届け。</p>
 
     <div class="articles" id="articles">
       <!-- NOTE_ARTICLES_START -->
-<a class="note-card" href="https://note.com/nachiko0215/n/n5323a8daf12c" target="_blank">
-  <div class="note-thumb">
-    <img src="https://assets.st-note.com/production/uploads/images/254642889/rectangle_large_type_2_ff9ff416371603b0d37cda4bc7afed3e.png?fit=bounds&quality=85&width=1280" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'">
-  </div>
-  <div class="note-info">
-    <div class="note-title">【完全ガイド】日常を物語に変える「体験型エンタメ」の歩き方 ｜ はじめまして、旅するうまさんです</div>
-    <div class="note-date">2026.02.25</div>
-  </div>
-</a>
-<a class="note-card" href="https://note.com/nachiko0215/n/n72a47a53976e" target="_blank">
-  <div class="note-thumb">
-    <img src="https://assets.st-note.com/production/uploads/images/263206145/rectangle_large_type_2_b6dfe44468c5ff362dab4ddc43cae819.png?fit=bounds&quality=85&width=1280" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'">
-  </div>
-  <div class="note-info">
-    <div class="note-title">【体験レポ】仮面をつけた瞬間から始まる異世界茶会｜花宵の大茶会｜北野天満宮【京都】</div>
-    <div class="note-date">2026.04.18</div>
-  </div>
-</a>
-<a class="note-card" href="https://note.com/nachiko0215/n/n0a422a7343e6" target="_blank">
-  <div class="note-thumb">
-    <img src="https://assets.st-note.com/production/uploads/images/262968935/rectangle_large_type_2_2fc5ec4df82cdf1a4df6b03ee5de90c5.png?fit=bounds&quality=85&width=1280" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'">
-  </div>
-  <div class="note-info">
-    <div class="note-title">【体験レポ】360°花嫁道中で江戸の街に入り込む半日体験｜太秦映画村【京都】</div>
-    <div class="note-date">2026.03.29</div>
-  </div>
-</a>
-<a class="note-card" href="https://note.com/nachiko0215/n/n79a107385962" target="_blank">
-  <div class="note-thumb">
-    <img src="https://assets.st-note.com/production/uploads/images/252297925/rectangle_large_type_2_49400b4d087e78ad094fbd7262afa4b8.png?fit=bounds&quality=85&width=1280" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'">
-  </div>
-  <div class="note-info">
-    <div class="note-title">【VR体験レポ】自分の足で歩き回れる異世界から始まる発見｜イマーシブジャーニー『印象派画家と過ごす夜』【横浜】</div>
-    <div class="note-date">2026.03.27</div>
-  </div>
-</a>
-<a class="note-card" href="https://note.com/nachiko0215/n/n25d5b25be25e" target="_blank">
-  <div class="note-thumb">
-    <img src="https://assets.st-note.com/production/uploads/images/261081953/rectangle_large_type_2_7c8780fc0fa9b09a9567b6c473651702.png?fit=bounds&quality=85&width=1280" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'">
-  </div>
-  <div class="note-info">
-    <div class="note-title">【体験レポ】爆弾を外して生き残れ！今際の国のアリス｜イマーシブ・フォート東京【お台場】</div>
-    <div class="note-date">2026.03.22</div>
-  </div>
-</a>
-<a class="note-card" href="https://note.com/nachiko0215/n/n5c70f591d155" target="_blank">
-  <div class="note-thumb">
-    <img src="https://assets.st-note.com/production/uploads/images/253931980/rectangle_large_type_2_962ac8a0aa96262f66682771a46b34a8.png?fit=bounds&quality=85&width=1280" alt="" loading="lazy" onerror="this.parentNode.innerHTML='📝'">
-  </div>
-  <div class="note-info">
-    <div class="note-title">【体験レポ】クリムト絵画に包まれる没入体験｜THE MOVEUM YOKOHAMA 美の黄金時代【横浜】</div>
-    <div class="note-date">2026.02.24</div>
-  </div>
-</a>
-<!-- NOTE_ARTICLES_END -->
+      <a class="article-card" href="https://note.com/nachiko0215" target="_blank" rel="noopener">
+        <div class="article-card__thumb article-card__thumb--placeholder" style="background:linear-gradient(135deg,#4a2fa3,#ff8b3d);">謎</div>
+        <div class="article-card__body">
+          <h3 class="article-card__title">体験レポート|没入型ナイトミュージアムに飛び込んできた話</h3>
+          <div class="article-card__meta">
+            <span class="article-card__date">2026.04.18</span>
+            <span class="article-card__tag">没入型アート</span>
+          </div>
+        </div>
+      </a>
+      <a class="article-card" href="https://note.com/nachiko0215" target="_blank" rel="noopener">
+        <div class="article-card__thumb article-card__thumb--placeholder" style="background:linear-gradient(135deg,#2a1262,#ffd23f);">扉</div>
+        <div class="article-card__body">
+          <h3 class="article-card__title">街歩きARG「夜の図書館へようこそ」を完走したよ</h3>
+          <div class="article-card__meta">
+            <span class="article-card__date">2026.04.05</span>
+            <span class="article-card__tag">ARG</span>
+          </div>
+        </div>
+      </a>
+      <a class="article-card" href="https://note.com/nachiko0215" target="_blank" rel="noopener">
+        <div class="article-card__thumb article-card__thumb--placeholder" style="background:linear-gradient(135deg,#6b4bd6,#f26a1a);">解</div>
+        <div class="article-card__body">
+          <h3 class="article-card__title">ホール型謎解き公演をひとりで挑んできた感想</h3>
+          <div class="article-card__meta">
+            <span class="article-card__date">2026.03.22</span>
+            <span class="article-card__tag">謎解き</span>
+          </div>
+        </div>
+      </a>
+      <!-- NOTE_ARTICLES_END -->
     </div>
 
     <div class="articles-actions">
@@ -893,7 +1453,7 @@
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231L18.244 2.25z"/></svg>
         </span>
         <span>
-          <strong>noteをみていったらXに投稿しよう！</strong>
+          <strong>noteを見て体験したら、Xに投稿しよう！</strong>
           <small>#旅するうまさん で感想シェア</small>
         </span>
       </a>
@@ -906,10 +1466,10 @@
   <!-- ============ [3] 挑戦状 ============ -->
   <section class="section" aria-labelledby="sec-quest">
     <div class="section__head">
-      <span class="section__num">03 / QUEST</span>
+      <span class="section__num">02 / QUEST</span>
     </div>
     <h2 class="section__title" id="sec-quest">うまさんからの<em>挑戦状</em></h2>
-    <p class="section__sub">毎日がちょっと楽しくなるクエストを配信中！</p>
+    <p class="section__sub" style="margin: 6px 2px 0px">毎日がちょっと楽しくなるクエストを配信中！</p>
 
     <article class="quest-card">
       <p class="quest-card__intro">
@@ -944,10 +1504,10 @@
   <!-- ============ [4] LINEスタンプ ============ -->
   <section class="section" aria-labelledby="sec-stamps">
     <div class="section__head">
-      <span class="section__num">04 / GO!</span>
+      <span class="section__num">03 / GOODS</span>
     </div>
-    <h2 class="section__title" id="sec-stamps">うまさんと一緒に<em>冒険しよう</em></h2>
-    <p class="section__sub">LINEスタンプでうまさんを連れて行こう。日々の会話に物語のかけらを。</p>
+    <h2 class="section__title" id="sec-stamps">うまさんと一緒に<em>冒険しよう！</em></h2>
+    <p class="section__sub" style="margin: 6px 2px 0px">LINEスタンプでうまさんを連れて行こう。日々の会話に物語のかけらを。</p>
 
     <div class="stamps">
       <a class="stamp-card" href="https://store.line.me/stickershop/product/1804842/ja" target="_blank" rel="noopener">
@@ -983,8 +1543,8 @@
     <a class="suzuri-card" href="https://suzuri.jp/nachiko0215" target="_blank" rel="noopener">
       <span class="suzuri-card__icon" aria-hidden="true">鈴</span>
       <span>
-        <h3 class="suzuri-card__title">SUZURIグッズもあるよ</h3>
-        <div class="suzuri-card__sub">Tシャツ・トート・ステッカーなど</div>
+        <h3 class="suzuri-card__title">SUZURIでグッズも販売中！</h3>
+        <div class="suzuri-card__sub">Tシャツ・スマホケース・ステッカーなど</div>
       </span>
       <span class="suzuri-card__arrow" aria-hidden="true">→</span>
     </a>
@@ -1016,6 +1576,155 @@
         ticking = true;
       }
     }, { passive: true });
+  })();
+
+  // Magical particles canvas — drifting wisps + rising sparkles + occasional shooting stars
+  (function () {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var canvas = document.getElementById('magicCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    var W = 0, H = 0;
+
+    function resize() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var COLORS = ['#ffd23f', '#ffe27a', '#a994ff', '#ff8b3d', '#ffffff', '#7be0d6'];
+    var wisps = [];
+    var WISP_COUNT = window.innerWidth < 720 ? 28 : 55;
+    for (var i = 0; i < WISP_COUNT; i++) {
+      wisps.push(makeWisp());
+    }
+    function makeWisp() {
+      return {
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: -0.15 - Math.random() * 0.35,
+        r: 0.6 + Math.random() * 1.8,
+        life: Math.random() * 1,
+        ttl: 220 + Math.random() * 380,
+        age: 0,
+        c: COLORS[Math.floor(Math.random() * COLORS.length)],
+        wob: Math.random() * Math.PI * 2,
+        wobSpd: 0.005 + Math.random() * 0.012
+      };
+    }
+
+    var shooters = [];
+    function maybeSpawnShooter() {
+      if (Math.random() < 0.004 && shooters.length < 2) {
+        shooters.push({
+          x: Math.random() * W,
+          y: -20,
+          vx: (Math.random() - 0.5) * 4,
+          vy: 4 + Math.random() * 3,
+          life: 1,
+          tail: []
+        });
+      }
+    }
+
+    function step() {
+      ctx.clearRect(0, 0, W, H);
+
+      // wisps
+      for (var i = 0; i < wisps.length; i++) {
+        var w = wisps[i];
+        w.age++;
+        w.wob += w.wobSpd;
+        w.x += w.vx + Math.sin(w.wob) * 0.4;
+        w.y += w.vy;
+        var t = w.age / w.ttl;
+        var alpha = t < 0.15 ? t / 0.15 : (t > 0.7 ? Math.max(0, (1 - t) / 0.3) : 1);
+        ctx.globalAlpha = alpha * 0.85;
+        var grad = ctx.createRadialGradient(w.x, w.y, 0, w.x, w.y, w.r * 6);
+        grad.addColorStop(0, w.c);
+        grad.addColorStop(0.4, w.c + '88');
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(w.x, w.y, w.r * 6, 0, Math.PI * 2);
+        ctx.fill();
+        // bright core
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = w.c;
+        ctx.beginPath();
+        ctx.arc(w.x, w.y, w.r, 0, Math.PI * 2);
+        ctx.fill();
+        if (w.age > w.ttl || w.y < -30 || w.x < -30 || w.x > W + 30) {
+          wisps[i] = makeWisp();
+          wisps[i].y = H + 10;
+        }
+      }
+
+      // shooting stars
+      maybeSpawnShooter();
+      for (var s = shooters.length - 1; s >= 0; s--) {
+        var sh = shooters[s];
+        sh.tail.unshift({ x: sh.x, y: sh.y });
+        if (sh.tail.length > 18) sh.tail.pop();
+        sh.x += sh.vx;
+        sh.y += sh.vy;
+        sh.life -= 0.012;
+        ctx.globalAlpha = Math.max(0, sh.life);
+        ctx.strokeStyle = '#fff7c2';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (var k = 0; k < sh.tail.length; k++) {
+          var p = sh.tail[k];
+          if (k === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+        // head glow
+        var sg = ctx.createRadialGradient(sh.x, sh.y, 0, sh.x, sh.y, 14);
+        sg.addColorStop(0, 'rgba(255,247,194,1)');
+        sg.addColorStop(1, 'rgba(255,247,194,0)');
+        ctx.fillStyle = sg;
+        ctx.beginPath();
+        ctx.arc(sh.x, sh.y, 14, 0, Math.PI * 2);
+        ctx.fill();
+        if (sh.life <= 0 || sh.y > H + 20) shooters.splice(s, 1);
+      }
+
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(step);
+    }
+    step();
+  })();
+
+  // CSS sparkle nodes — randomized positions/durations on load
+  (function () {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var host = document.getElementById('magicSparkles');
+    if (!host) return;
+    var COUNT = window.innerWidth < 720 ? 14 : 26;
+    var COLORS = ['#ffd23f', '#ffe27a', '#a994ff', '#ffffff'];
+    for (var i = 0; i < COUNT; i++) {
+      var s = document.createElement('span');
+      s.className = 'magic-sparkle';
+      var c = COLORS[Math.floor(Math.random() * COLORS.length)];
+      s.style.background = c;
+      s.style.boxShadow = '0 0 8px 2px ' + c + 'cc, 0 0 18px 4px ' + c + '66';
+      s.style.left = (Math.random() * 100) + '%';
+      s.style.top = (60 + Math.random() * 60) + '%';
+      var dur = 6 + Math.random() * 8;
+      var delay = -Math.random() * dur;
+      s.style.animationDuration = dur + 's';
+      s.style.animationDelay = delay + 's';
+      s.style.width = s.style.height = (3 + Math.random() * 3) + 'px';
+      host.appendChild(s);
+    }
   })();
 
   // Reveal-on-scroll
