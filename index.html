@@ -407,7 +407,7 @@ section{padding:30px 0}
 <section id="quest" class="fade">
   <div class="wrap">
     <div class="section-head"><div><div class="section-title"><img src="assets/icon-quest.png" alt=""><div><span>TODAY'S QUEST</span><h2>うまさんからの挑戦状</h2></div></div><p>毎朝7時に届く、小さな冒険のきっかけ。</p></div></div>
-    <div class="quest-shell"><div class="quest-content"><h3>今日の挑戦状</h3><p class="quest-main">空の写真を1枚撮ってみよう</p><p class="quest-text">いつもの帰り道の空でも、はじめての場所の空でもOK。今日の空は、どんな色をしてるかな？</p><a class="btn btn-main" href="https://twitter.com/intent/tweet?text=今日の挑戦状をやってみました！%0A%23うまさんからの挑戦状" target="_blank" rel="noopener">Xで結果を投稿する</a><div class="hashtag">#うまさんからの挑戦状</div></div><img class="quest-uma" src="assets/umasan-letter.png" alt=""></div>
+    <div class="quest-shell" id="quest-shell"><div class="quest-content" id="quest-content"><h3>今日の挑戦状</h3><p class="quest-main" id="quest-title">読み込み中...</p><p class="quest-text" id="quest-desc"></p><a class="btn btn-main" id="quest-share-btn" href="https://twitter.com/intent/tweet?text=%23うまさんからの挑戦状" target="_blank" rel="noopener">Xで結果を投稿する</a><div class="hashtag">#うまさんからの挑戦状</div></div><img class="quest-uma" src="assets/umasan-letter.png" alt=""></div>
   </div>
 </section>
 <section id="articles" class="fade">
@@ -588,6 +588,47 @@ document.querySelectorAll('a,.btn,.bottom-nav a').forEach(el=>{
     spark.addEventListener('animationend',()=>spark.remove(),{once:true});
   });
 });
+
+async function loadTodayQuest() {
+  try {
+    const res = await fetch('quest.json?t=' + Date.now());
+    const data = await res.json();
+
+    const now = new Date();
+    const jst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+    const today = jst.toISOString().split('T')[0];
+
+    const quest = data.quests.find(q => q.date === today);
+
+    if (quest) {
+      document.getElementById('quest-title').textContent = quest.title;
+      document.getElementById('quest-desc').textContent = quest.description;
+      const shareText = encodeURIComponent(
+        `クエスト『${quest.title}』\n\nやってみました！\n#うまさんからの挑戦状`
+      );
+      document.getElementById('quest-share-btn').href =
+        `https://twitter.com/intent/tweet?text=${shareText}`;
+    } else {
+      const sorted = data.quests.sort((a, b) =>
+        new Date(b.date) - new Date(a.date)
+      );
+      const latest = sorted[0];
+      if (latest) {
+        document.getElementById('quest-title').textContent = latest.title;
+        document.getElementById('quest-desc').textContent = latest.description;
+        const shareText = encodeURIComponent(
+          `クエスト『${latest.title}』\n\nやってみました！\n#うまさんからの挑戦状`
+        );
+        document.getElementById('quest-share-btn').href =
+          `https://twitter.com/intent/tweet?text=${shareText}`;
+      }
+    }
+  } catch(e) {
+    console.log('quest.json読み込みエラー:', e);
+  }
+}
+
+loadTodayQuest();
 </script>
 </body>
 </html>
