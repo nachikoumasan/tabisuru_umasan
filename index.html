@@ -296,6 +296,7 @@ section{padding:30px 0}
 .quest-content h3{margin:0 0 8px;font-size:28px;padding-left:0}
 .quest-main{margin:0 0 8px;font-size:23px;font-weight:900}
 .quest-text{margin:0 0 18px;font-weight:700;color:rgba(67,38,15,.74)}
+.quest-difficulty{font-size:14px;font-weight:700;color:rgba(67,38,15,.65);margin:0 0 14px;letter-spacing:0.05em}
 .quest-uma{position:absolute;right:24px;bottom:20px;width:150px;z-index:1}
 .hashtag{margin-top:10px;font-size:13px;font-weight:900;color:var(--ink2)}
 
@@ -407,7 +408,7 @@ section{padding:30px 0}
 <section id="quest" class="fade">
   <div class="wrap">
     <div class="section-head"><div><div class="section-title"><img src="assets/icon-quest.png" alt=""><div><span>TODAY'S QUEST</span><h2>うまさんからの挑戦状</h2></div></div><p>毎朝7時に届く、小さな冒険のきっかけ。</p></div></div>
-    <div class="quest-shell" id="quest-shell"><div class="quest-content" id="quest-content"><h3>今日の挑戦状</h3><p class="quest-main" id="quest-title">読み込み中...</p><p class="quest-text" id="quest-desc"></p><a class="btn btn-main" id="quest-share-btn" href="https://twitter.com/intent/tweet?text=%23うまさんからの挑戦状" target="_blank" rel="noopener">Xで結果を投稿する</a><div class="hashtag">#うまさんからの挑戦状</div></div><img class="quest-uma" src="assets/umasan-letter.png" alt=""></div>
+    <div class="quest-shell" id="quest-shell"><div class="quest-content" id="quest-content"><h3>今日の挑戦状</h3><p class="quest-main" id="quest-title">読み込み中...</p><p class="quest-text" id="quest-short-text"></p><p class="quest-difficulty" id="quest-difficulty"></p><a class="btn btn-main" id="quest-share-btn" href="https://twitter.com/intent/tweet?text=%23うまさんからの挑戦状" target="_blank" rel="noopener">Xで結果を投稿する</a><div class="hashtag">#うまさんからの挑戦状</div></div><img class="quest-uma" src="assets/umasan-letter.png" alt=""></div>
   </div>
 </section>
 <section id="articles" class="fade">
@@ -416,7 +417,7 @@ section{padding:30px 0}
     <div class="article-grid">
       <!-- NOTE_ARTICLES_START -->
       <article class="card article" onclick="location.href='https://note.com/nachiko0215/n/n5323a8daf12c'" style="cursor:pointer">
-  <div class="thumb"><img src="https://assets.st-note.com/production/uploads/images/272147892/rectangle_large_type_2_610f3bd8f33c2b3b833790fd8039b2aa.png?fit=bounds&quality=85&width=1280" alt="【完全ガイド】日常を物語に変える「体験型エンタメ」の歩き方 ｜ はじめまして、旅するうまさんです" loading="lazy"></div>
+  <div class="thumb"><img src="https://assets.st-note.com/production/uploads/images/254642889/rectangle_large_type_2_ff9ff416371603b0d37cda4bc7afed3e.png?fit=bounds&quality=85&width=1280" alt="【完全ガイド】日常を物語に変える「体験型エンタメ」の歩き方 ｜ はじめまして、旅するうまさんです" loading="lazy"></div>
   <h3>【完全ガイド】日常を物語に変える「体験型エンタメ」の歩き方 ｜ はじめまして、旅するうまさんです</h3>
   <time>2026.02.25</time>
 </article>
@@ -445,7 +446,7 @@ section{padding:30px 0}
   <div class="wrap">
     <div class="section-head"><div><div class="section-title"><img src="assets/icon-goods.png" alt=""><div><span>UMASAN LIFE</span><h2>うまさんのいる日常</h2></div></div><p>スマホに、会話に、おでかけに。うまさんを連れていこう。</p></div></div>
     <div class="goods-grid">
-      <article class="card goods"><div class="wallpaper-preview"><img src="assets/wallpaper-umasan.jpg" alt="スマホ壁紙"></div><h3>スマホ壁紙</h3><p>季節に合わせた、うまさんの待ち受け。</p><a class="btn btn-main" href="https://x.com/search?q=%23%E3%81%86%E3%81%BE%E3%81%95%E3%82%93%E3%81%AE%E3%81%84%E3%82%8B%E6%97%A5%E5%B8%B8" target="_blank" rel="noopener">壁紙を見る</a></article>
+      <article class="card goods"><div class="wallpaper-preview"><img src="assets/wallpaper-umasan.jpg" alt="スマホ壁紙"></div><h3>スマホ壁紙</h3><p>季節に合わせた、うまさんの待ち受け。</p><a class="btn btn-main" href="https://x.com/search?q=%23%E3%81%86%E3%81%BE%E3%81%95%E3%82%93%E3%81%AE%E3%81%84%E3%82%8B%E6%97%A5%E5%B8%B8%20%23%E3%82%B9%E3%83%9E%E3%83%9B%E5%A3%81%E7%B4%99&src=typed_query&f=live" target="_blank" rel="noopener">壁紙を見る</a></article>
       <article class="card goods"><div class="stamp-strip"><img src="https://stickershop.line-scdn.net/stickershop/v1/product/1345317/LINEStorePC/main.png?v=1" alt=""><img src="https://stickershop.line-scdn.net/stickershop/v1/product/1365459/LINEStorePC/main.png?v=1" alt=""><img src="https://stickershop.line-scdn.net/stickershop/v1/product/1433383/LINEStorePC/main.png?v=1" alt=""><img src="https://stickershop.line-scdn.net/stickershop/v1/product/1804842/LINEStorePC/main.png?v=1" alt=""></div><h3>LINEスタンプ</h3><p>日常の会話に、ゆるくてかわいいうまさんを。</p><a class="btn btn-main" href="https://store.line.me/stickershop/author/114526/ja" target="_blank" rel="noopener">スタンプを見る</a></article>
       <article class="card goods"><div class="suzuri-strip"><img src="assets/suzuri-hoodie.png" alt="SUZURI パーカー"><img src="assets/suzuri-tshirt.png" alt="SUZURI Tシャツ"><img src="assets/suzuri-phonecase.png" alt="SUZURI スマホケース"><img src="assets/suzuri-sticker.png" alt="SUZURI ステッカー"></div><h3>SUZURIグッズ</h3><p>パーカー、Tシャツ、スマホケースなど。</p><a class="btn btn-main" href="https://suzuri.jp/nachiko0215?sort=sales" target="_blank" rel="noopener">ショップを見る</a></article>
     </div>
@@ -602,7 +603,8 @@ async function loadTodayQuest() {
 
     if (quest) {
       document.getElementById('quest-title').textContent = quest.title;
-      document.getElementById('quest-desc').textContent = quest.description;
+      document.getElementById('quest-short-text').textContent = quest.short_text || quest.description || '';
+      document.getElementById('quest-difficulty').textContent = quest.difficulty ? '難易度：' + quest.difficulty : '';
       const shareText = encodeURIComponent(
         `クエスト『${quest.title}』\n\nやってみました！\n#うまさんからの挑戦状`
       );
@@ -615,7 +617,8 @@ async function loadTodayQuest() {
       const latest = sorted[0];
       if (latest) {
         document.getElementById('quest-title').textContent = latest.title;
-        document.getElementById('quest-desc').textContent = latest.description;
+        document.getElementById('quest-short-text').textContent = latest.short_text || latest.description || '';
+        document.getElementById('quest-difficulty').textContent = latest.difficulty ? '難易度：' + latest.difficulty : '';
         const shareText = encodeURIComponent(
           `クエスト『${latest.title}』\n\nやってみました！\n#うまさんからの挑戦状`
         );
