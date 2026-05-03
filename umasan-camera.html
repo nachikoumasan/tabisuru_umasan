@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>うまさんARカメラ</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #FFF4E6;
+    --paper: #F5E8D3;
+    --brown: #3E2A1E;
+    --gold: #F4B942;
+    --gold-dark: #C8943A;
+    --pink: #F2A8A8;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--brown);
+    font-family: 'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', sans-serif;
+    touch-action: none;
+  }
+
+  /* ── スクリーン共通 ── */
+  .screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s;
+  }
+  .screen.hidden { opacity: 0; pointer-events: none; }
+
+  /* ── ① ポーズ選択画面 ── */
+  #selectScreen {
+    background: linear-gradient(160deg, #2a1a0e 0%, #3e2a1e 60%, #1a0e06 100%);
+    padding: 24px 20px;
+    gap: 0;
+  }
+
+  .select-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .select-header h1 {
+    font-size: 22px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .select-header p {
+    font-size: 13px;
+    color: rgba(255,244,230,0.65);
+    letter-spacing: 0.04em;
+  }
+
+  .pose-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .pose-card {
+    background: rgba(255,244,230,0.07);
+    border: 1.5px solid rgba(244,185,66,0.25);
+    border-radius: 20px;
+    padding: 16px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pose-card:active {
+    transform: scale(0.95);
+    background: rgba(244,185,66,0.15);
+    border-color: var(--gold);
+  }
+
+  .pose-thumb {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 14px;
+    background: rgba(255,244,230,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+    overflow: hidden;
+  }
+  .pose-thumb img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+  }
+
+  .pose-label {
+    font-size: 12px;
+    color: rgba(255,244,230,0.7);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── ② カメラ画面 ── */
+  #cameraScreen {
+    background: #000;
+    padding: 0;
+    justify-content: flex-start;
+  }
+
+  #video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* うまさんオーバーレイ */
+  #umasanOverlay {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    touch-action: none;
+    cursor: grab;
+    z-index: 10;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #umasanOverlay img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  }
+  #umasanOverlay:active { cursor: grabbing; }
+
+  /* カメラUIオーバーレイ */
+  .camera-ui {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0;
+  }
+
+  .camera-top {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+    padding: 52px 20px 20px;
+    text-align: center;
+    pointer-events: auto;
+  }
+  .camera-top p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.06em;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  }
+
+  .camera-bottom {
+    background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+    padding: 24px 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: auto;
+    gap: 16px;
+  }
+
+  .btn-back {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s;
+  }
+  .btn-back:active { background: rgba(255,255,255,0.3); transform: scale(0.92); }
+
+  .btn-shutter {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid rgba(255,255,255,0.4);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .btn-shutter:active { transform: scale(0.9); background: #eee; }
+  .btn-shutter-inner {
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .btn-flip {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s;
+  }
+  .btn-flip:active { background: rgba(255,255,255,0.3); transform: scale(0.92); }
+
+  /* 撮影フラッシュ */
+  #flashOverlay {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    opacity: 0;
+    z-index: 50;
+    pointer-events: none;
+    transition: opacity 0.05s;
+  }
+
+  /* ── ③ 撮影後画面 ── */
+  #resultScreen {
+    background: linear-gradient(160deg, #2a1a0e 0%, #3e2a1e 60%, #1a0e06 100%);
+    padding: 24px 20px 40px;
+    gap: 20px;
+  }
+
+  .result-header {
+    text-align: center;
+  }
+  .result-header p {
+    font-size: 15px;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+  }
+
+  #resultCanvas {
+    width: 100%;
+    max-width: 340px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    display: block;
+  }
+
+  .result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 17px;
+    border-radius: 16px;
+    border: none;
+    background: var(--gold);
+    color: var(--brown);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s;
+  }
+  .btn-primary:active { transform: scale(0.97); filter: brightness(0.92); }
+
+  .btn-secondary {
+    width: 100%;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1.5px solid rgba(244,185,66,0.4);
+    background: rgba(244,185,66,0.08);
+    color: var(--cream);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s;
+  }
+  .btn-secondary:active { transform: scale(0.97); background: rgba(244,185,66,0.18); }
+
+  .btn-ghost {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: transparent;
+    color: rgba(255,244,230,0.5);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-ghost:active { color: rgba(255,244,230,0.8); }
+
+  /* 非表示canvas（撮影用） */
+  #shootCanvas { display: none; }
+
+  /* ローディング */
+  #loadingMsg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    z-index: 100;
+    letter-spacing: 0.06em;
+  }
+  #loadingMsg.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- ── ① ポーズ選択画面 ── -->
+<div id="selectScreen" class="screen">
+  <div class="select-header">
+    <h1>🐴 うまさんARカメラ</h1>
+    <p>うまさんのポーズを選んでね</p>
+  </div>
+  <div class="pose-grid">
+    <div class="pose-card" onclick="selectPose('umasan1.png', 'おでかけポーズ')">
+      <div class="pose-thumb">
+        <img src="umasan1.png" alt="ポーズ1" onerror="this.parentNode.innerHTML='🐴'">
+      </div>
+      <span class="pose-label">おでかけ</span>
+    </div>
+    <div class="pose-card" onclick="selectPose('umasan2.png', 'ランタンポーズ')">
+      <div class="pose-thumb">
+        <img src="umasan2.png" alt="ポーズ2" onerror="this.parentNode.innerHTML='🏮'">
+      </div>
+      <span class="pose-label">ランタン</span>
+    </div>
+    <div class="pose-card" onclick="selectPose('umasan3.png', 'わくわくポーズ')">
+      <div class="pose-thumb">
+        <img src="umasan3.png" alt="ポーズ3" onerror="this.parentNode.innerHTML='✨'">
+      </div>
+      <span class="pose-label">わくわく</span>
+    </div>
+    <div class="pose-card" onclick="selectPose('umasan4.png', 'おやすみポーズ')">
+      <div class="pose-thumb">
+        <img src="umasan4.png" alt="ポーズ4" onerror="this.parentNode.innerHTML='🌙'">
+      </div>
+      <span class="pose-label">おやすみ</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── ② カメラ画面 ── -->
+<div id="cameraScreen" class="screen hidden">
+  <video id="video" autoplay playsinline muted></video>
+
+  <!-- うまさんオーバーレイ -->
+  <div id="umasanOverlay">
+    <img id="umasanImg" src="" alt="うまさん">
+  </div>
+
+  <!-- UI -->
+  <div class="camera-ui">
+    <div class="camera-top">
+      <p>うまさんを好きな場所に置いてね🐴</p>
+    </div>
+    <div class="camera-bottom">
+      <button class="btn-back" onclick="goBack()">←</button>
+      <button class="btn-shutter" onclick="shoot()">
+        <div class="btn-shutter-inner"></div>
+      </button>
+      <button class="btn-flip" onclick="flipCamera()">⇄</button>
+    </div>
+  </div>
+
+  <div id="flashOverlay"></div>
+</div>
+
+<!-- ③ 撮影後画面 -->
+<div id="resultScreen" class="screen hidden">
+  <div class="result-header">
+    <p>今日の冒険、撮れたよ🐴</p>
+  </div>
+  <canvas id="resultCanvas"></canvas>
+  <div class="result-actions">
+    <button class="btn-primary" onclick="saveImage()">💾 保存する</button>
+    <button class="btn-secondary" onclick="postToX()">𝕏 Xに投稿する</button>
+    <button class="btn-ghost" onclick="retake()">もう一度撮る</button>
+  </div>
+</div>
+
+<!-- 撮影用非表示canvas -->
+<canvas id="shootCanvas"></canvas>
+
+<!-- ローディング -->
+<div id="loadingMsg" class="hidden">カメラを起動中...</div>
+
+<script>
+// ── 状態管理 ──
+const state = {
+  selectedPose: '',
+  facingMode: 'environment', // 背面カメラ
+  stream: null,
+  // うまさんの位置・サイズ
+  uma: { x: 0, y: 0, scale: 1, baseSize: 160 },
+  // ドラッグ
+  drag: { active: false, startX: 0, startY: 0, origX: 0, origY: 0 },
+  // ピンチ
+  pinch: { active: false, startDist: 0, startScale: 1 },
+};
+
+// ── 画面切り替え ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+// ── ① ポーズ選択 ──
+function selectPose(filename, label) {
+  state.selectedPose = filename;
+  document.getElementById('umasanImg').src = filename;
+  startCamera();
+}
+
+// ── カメラ起動 ──
+async function startCamera() {
+  const loading = document.getElementById('loadingMsg');
+  loading.classList.remove('hidden');
+
+  // 既存ストリームを停止
+  if (state.stream) {
+    state.stream.getTracks().forEach(t => t.stop());
+  }
+
+  try {
+    state.stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: state.facingMode,
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+      },
+      audio: false,
+    });
+    const video = document.getElementById('video');
+    video.srcObject = state.stream;
+    await video.play();
+
+    // うまさんを中央にリセット
+    const overlay = document.getElementById('umasanOverlay');
+    state.uma.x = window.innerWidth / 2 - state.uma.baseSize / 2;
+    state.uma.y = window.innerHeight / 2 - state.uma.baseSize / 2;
+    state.uma.scale = 1;
+    applyUmasanTransform();
+
+    showScreen('cameraScreen');
+  } catch(e) {
+    alert('カメラを起動できませんでした。\nカメラの使用を許可してください。');
+    console.error(e);
+  } finally {
+    loading.classList.add('hidden');
+  }
+}
+
+// ── カメラ前後切り替え ──
+async function flipCamera() {
+  state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
+  await startCamera();
+}
+
+// ── うまさん位置反映 ──
+function applyUmasanTransform() {
+  const overlay = document.getElementById('umasanOverlay');
+  const size = state.uma.baseSize * state.uma.scale;
+  overlay.style.left = state.uma.x + 'px';
+  overlay.style.top = state.uma.y + 'px';
+  overlay.style.width = size + 'px';
+  overlay.style.height = size + 'px';
+  overlay.style.transform = 'none';
+}
+
+// ── タッチ・ドラッグ操作 ──
+const overlay = document.getElementById('umasanOverlay');
+
+overlay.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  if (e.touches.length === 1) {
+    // ドラッグ開始
+    state.drag.active = true;
+    state.pinch.active = false;
+    state.drag.startX = e.touches[0].clientX;
+    state.drag.startY = e.touches[0].clientY;
+    state.drag.origX = state.uma.x;
+    state.drag.origY = state.uma.y;
+  } else if (e.touches.length === 2) {
+    // ピンチ開始
+    state.drag.active = false;
+    state.pinch.active = true;
+    state.pinch.startDist = getTouchDist(e.touches);
+    state.pinch.startScale = state.uma.scale;
+  }
+}, { passive: false });
+
+overlay.addEventListener('touchmove', (e) => {
+  e.preventDefault();
+  if (state.drag.active && e.touches.length === 1) {
+    const dx = e.touches[0].clientX - state.drag.startX;
+    const dy = e.touches[0].clientY - state.drag.startY;
+    state.uma.x = state.drag.origX + dx;
+    state.uma.y = state.drag.origY + dy;
+    applyUmasanTransform();
+  } else if (state.pinch.active && e.touches.length === 2) {
+    const dist = getTouchDist(e.touches);
+    const ratio = dist / state.pinch.startDist;
+    state.uma.scale = Math.min(4, Math.max(0.3, state.pinch.startScale * ratio));
+    applyUmasanTransform();
+  }
+}, { passive: false });
+
+overlay.addEventListener('touchend', (e) => {
+  if (e.touches.length === 0) {
+    state.drag.active = false;
+    state.pinch.active = false;
+  } else if (e.touches.length === 1) {
+    state.pinch.active = false;
+    // ドラッグに切り替え
+    state.drag.active = true;
+    state.drag.startX = e.touches[0].clientX;
+    state.drag.startY = e.touches[0].clientY;
+    state.drag.origX = state.uma.x;
+    state.drag.origY = state.uma.y;
+  }
+}, { passive: false });
+
+// マウス対応（PC確認用）
+overlay.addEventListener('mousedown', (e) => {
+  state.drag.active = true;
+  state.drag.startX = e.clientX;
+  state.drag.startY = e.clientY;
+  state.drag.origX = state.uma.x;
+  state.drag.origY = state.uma.y;
+});
+document.addEventListener('mousemove', (e) => {
+  if (!state.drag.active) return;
+  state.uma.x = state.drag.origX + (e.clientX - state.drag.startX);
+  state.uma.y = state.drag.origY + (e.clientY - state.drag.startY);
+  applyUmasanTransform();
+});
+document.addEventListener('mouseup', () => { state.drag.active = false; });
+
+function getTouchDist(touches) {
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+// ── 撮影 ──
+function shoot() {
+  // フラッシュ演出
+  const flash = document.getElementById('flashOverlay');
+  flash.style.opacity = '1';
+  setTimeout(() => { flash.style.opacity = '0'; }, 120);
+
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('shootCanvas');
+  const ctx = canvas.getContext('2d');
+
+  const W = video.videoWidth || window.innerWidth;
+  const H = video.videoHeight || window.innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+
+  // カメラ映像を描画
+  ctx.drawImage(video, 0, 0, W, H);
+
+  // うまさんを合成（画面サイズとvideo解像度の比率を考慮）
+  const scaleX = W / window.innerWidth;
+  const scaleY = H / window.innerHeight;
+  const uma = state.uma;
+  const size = uma.baseSize * uma.scale;
+
+  const umaImg = document.getElementById('umasanImg');
+
+  ctx.drawImage(
+    umaImg,
+    uma.x * scaleX,
+    uma.y * scaleY,
+    size * scaleX,
+    size * scaleY
+  );
+
+  // 結果画面に表示
+  const resultCanvas = document.getElementById('resultCanvas');
+  resultCanvas.width = W;
+  resultCanvas.height = H;
+  resultCanvas.getContext('2d').drawImage(canvas, 0, 0);
+  resultCanvas.style.maxHeight = (window.innerHeight * 0.45) + 'px';
+  resultCanvas.style.objectFit = 'contain';
+
+  showScreen('resultScreen');
+}
+
+// ── 保存 ──
+function saveImage() {
+  const canvas = document.getElementById('shootCanvas');
+  const a = document.createElement('a');
+  a.download = 'umasan_' + new Date().getTime() + '.jpg';
+  a.href = canvas.toDataURL('image/jpeg', 0.92);
+  a.click();
+}
+
+// ── X投稿 ──
+function postToX() {
+  const text = '今日、うまさんと小さな冒険をしてきました🐴\n#旅するうまさん #うまさんのいる日常';
+  const url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+}
+
+// ── もう一度撮る ──
+function retake() {
+  showScreen('cameraScreen');
+}
+
+// ── 戻る ──
+function goBack() {
+  if (state.stream) {
+    state.stream.getTracks().forEach(t => t.stop());
+    state.stream = null;
+  }
+  showScreen('selectScreen');
+}
+</script>
+</body>
+</html>
