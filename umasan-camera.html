@@ -620,16 +620,41 @@ function shoot() {
   resultCanvas.style.maxHeight = (window.innerHeight * 0.45) + 'px';
   resultCanvas.style.objectFit = 'contain';
 
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  document.querySelector('#resultScreen .btn-primary').textContent =
+    isIOS ? '🖼️ 写真を開く（長押しで保存）' : '💾 保存する';
+
   showScreen('resultScreen');
 }
 
 // ── 保存 ──
 function saveImage() {
   const canvas = document.getElementById('shootCanvas');
-  const a = document.createElement('a');
-  a.download = 'umasan_' + new Date().getTime() + '.jpg';
-  a.href = canvas.toDataURL('image/jpeg', 0.92);
-  a.click();
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if (isIOS) {
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    const win = window.open('', '_blank');
+    win.document.write(
+      '<html><head><meta name="viewport" content="width=device-width">' +
+      '<title>うまさん写真</title></head><body style="margin:0;background:#000;' +
+      'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+      'min-height:100vh;">' +
+      '<img src="' + dataUrl + '" style="max-width:100%;border-radius:12px;">' +
+      '<p style="color:#fff;font-size:14px;margin-top:16px;text-align:center;' +
+      'padding:0 20px;line-height:1.8;">画像を長押しして<br>「写真に追加」で保存してね🐴</p>' +
+      '</body></html>'
+    );
+    win.document.close();
+  } else {
+    const a = document.createElement('a');
+    a.download = 'umasan_' + new Date().getTime() + '.jpg';
+    a.href = canvas.toDataURL('image/jpeg', 0.92);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
 }
 
 // ── X投稿 ──
