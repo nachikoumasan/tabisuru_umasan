@@ -3675,6 +3675,623 @@ body{
 }
 </style>
 
+
+<style>
+/* =========================================================
+   MOCK TASTE PATCH
+   目的：レイアウト構造は変えず、背景・色・光・フッターのみモック寄りへ調整
+   ========================================================= */
+
+/* 全体：夜の入口感を戻す */
+body{
+  background:
+    radial-gradient(circle at 52% 18%, rgba(98,55,165,.24), transparent 34%),
+    radial-gradient(circle at 82% 62%, rgba(244,185,66,.10), transparent 28%),
+    linear-gradient(180deg,#10051f 0%,#1a0b2f 34%,#12061f 100%) !important;
+}
+
+/* 魔法エフェクト：背景より前、コンテンツより後ろ */
+.magic-canvas,
+.magic-sparkles{
+  z-index:2 !important;
+  opacity:.72 !important;
+  mix-blend-mode:screen !important;
+  pointer-events:none !important;
+}
+.magic-orbs,
+.magic-aurora{
+  z-index:0 !important;
+}
+main,
+.hero,
+.hero-card,
+.content-board,
+.footer{
+  position:relative !important;
+  z-index:1 !important;
+}
+.hero-inner,
+.content-board-inner,
+.footer-inner,
+.card,
+.quest-shell,
+.quest-envelope,
+.section-head,
+.note-actions{
+  position:relative !important;
+  z-index:5 !important;
+}
+
+/* ヒーロー：レイアウトはそのまま、光と夜色だけ強化 */
+.hero-card{
+  background:#0d0618 !important;
+  box-shadow:
+    0 0 0 1px rgba(244,185,66,.18),
+    0 22px 54px rgba(0,0,0,.45) !important;
+}
+.hero h1{
+  color:#fff8e8 !important;
+  text-shadow:
+    0 3px 18px rgba(0,0,0,.55),
+    0 0 22px rgba(244,185,66,.10) !important;
+}
+.kicker{
+  color:#F4B942 !important;
+  text-shadow:0 0 12px rgba(244,185,66,.28) !important;
+}
+
+/* コンテンツエリア：ベージュ一色から、モック寄りの夜紫＋羊皮紙の中間へ */
+.content-board{
+  background:
+    radial-gradient(circle at 18% 18%, rgba(244,185,66,.10), transparent 24%),
+    radial-gradient(circle at 82% 28%, rgba(120,76,180,.18), transparent 30%),
+    linear-gradient(180deg, rgba(28,13,47,.96) 0%, rgba(34,16,54,.96) 100%) !important;
+  border-top:1px solid rgba(244,185,66,.38) !important;
+  border-bottom:1px solid rgba(244,185,66,.24) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,238,180,.12),
+    0 -10px 34px rgba(0,0,0,.26) !important;
+}
+
+/* カラム境界：金の細線に */
+.content-board #quest{
+  border-right-color:rgba(244,185,66,.22) !important;
+}
+.content-board #goods{
+  border-left-color:rgba(244,185,66,.22) !important;
+}
+
+/* セクション見出し：モックの金＋クリーム文字へ */
+.content-board .section-head span,
+.section-head span{
+  color:#F4B942 !important;
+  text-shadow:0 0 10px rgba(244,185,66,.22) !important;
+}
+.content-board .section-head h2,
+.section-head h2{
+  color:#fff2d2 !important;
+  text-shadow:0 2px 10px rgba(0,0,0,.28) !important;
+}
+.content-board .section-head p,
+#articles .section-head p,
+#goods .section-head p{
+  color:rgba(255,241,209,.74) !important;
+}
+.content-board .section-head::after,
+.section-head::after{
+  background:linear-gradient(90deg, rgba(244,185,66,.48), transparent) !important;
+}
+.deco-line{
+  background:linear-gradient(90deg, transparent, rgba(244,185,66,.36), transparent) !important;
+}
+
+/* 挑戦状：紙は主役なので暖かさを維持しつつ光を少し足す */
+.quest-shell{
+  filter:
+    drop-shadow(0 18px 24px rgba(0,0,0,.22))
+    drop-shadow(0 0 18px rgba(244,185,66,.10)) !important;
+}
+.quest-envelope{
+  filter:
+    drop-shadow(0 10px 14px rgba(0,0,0,.22))
+    drop-shadow(0 0 10px rgba(244,185,66,.12)) !important;
+}
+
+/* 冒険記・日常カード：暗背景に映える、控えめ羊皮紙カード */
+.article.card,
+.goods.card{
+  background:
+    linear-gradient(180deg, rgba(255,246,226,.94), rgba(239,222,187,.92)) !important;
+  border:1px solid rgba(244,185,66,.48) !important;
+  outline:1px solid rgba(116,72,26,.22) !important;
+  outline-offset:-8px !important;
+  box-shadow:
+    0 0 0 1px rgba(255,244,210,.06),
+    0 10px 22px rgba(0,0,0,.18),
+    0 0 18px rgba(244,185,66,.05) !important;
+}
+.article.card:hover,
+.goods.card:hover{
+  border-color:rgba(244,185,66,.72) !important;
+  box-shadow:
+    0 12px 26px rgba(0,0,0,.22),
+    0 0 20px rgba(244,185,66,.10) !important;
+}
+
+/* カード内テキスト色は読みやすく維持 */
+.article h3,
+.goods h3{
+  color:#2f1808 !important;
+}
+.article time,
+.goods p{
+  color:rgba(58,33,14,.72) !important;
+}
+
+/* ボタン：モック寄りの薄茶＋濃茶枠 */
+.content-board .note-actions .btn-main,
+.goods .btn-main,
+.goods-coming .btn.disabled{
+  background:rgba(232,213,160,.78) !important;
+  color:#3a210e !important;
+  border:1.5px solid rgba(58,33,14,.92) !important;
+  box-shadow:0 0 10px rgba(244,185,66,.06) !important;
+}
+.content-board .note-actions .btn-main:hover,
+.goods .btn-main:hover{
+  background:rgba(244,226,178,.92) !important;
+  box-shadow:0 0 14px rgba(244,185,66,.16) !important;
+}
+
+/* 注釈文も暗背景で読める色へ */
+.note-actions p{
+  color:rgba(255,241,209,.68) !important;
+}
+
+/* フッター：モック寄りの深い夜＋金の余韻 */
+.footer{
+  background:
+    radial-gradient(circle at 50% 0%, rgba(244,185,66,.12), transparent 30%),
+    radial-gradient(circle at 82% 60%, rgba(120,76,180,.12), transparent 28%),
+    linear-gradient(180deg,#170903 0%,#251008 100%) !important;
+  border-top:1px solid rgba(244,185,66,.32) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,228,160,.10),
+    0 -8px 24px rgba(0,0,0,.28) !important;
+}
+.footer-follow-label{
+  color:#F4B942 !important;
+  text-shadow:0 0 12px rgba(244,185,66,.28) !important;
+}
+.footer-sns a{
+  background:rgba(244,185,66,.13) !important;
+  color:#F4B942 !important;
+  border:1px solid rgba(244,185,66,.38) !important;
+}
+.footer-sns a:hover{
+  background:rgba(244,185,66,.24) !important;
+}
+.footer-copy{
+  color:rgba(255,241,209,.46) !important;
+}
+.footer-horseshoe img{
+  filter:drop-shadow(0 0 12px rgba(244,185,66,.20)) !important;
+}
+
+/* スマホ下部ナビも同じ夜色へ */
+.bottom-nav{
+  background:
+    linear-gradient(180deg, rgba(36,16,8,.98), rgba(18,7,5,.98)) !important;
+  border-top:1px solid rgba(244,185,66,.28) !important;
+}
+.bottom-nav a{
+  color:#ffe7b2 !important;
+}
+
+/* スマホでも世界観の色だけ合わせる。サイズや配置は触らない */
+@media(max-width:820px){
+  .content-board{
+    background:
+      radial-gradient(circle at 50% 0%, rgba(244,185,66,.10), transparent 30%),
+      linear-gradient(180deg, rgba(28,13,47,.96), rgba(34,16,54,.96)) !important;
+  }
+
+  .content-board .section-head h2,
+  .section-head h2{
+    color:#fff2d2 !important;
+  }
+
+  .content-board .section-head p,
+  .section-head p{
+    color:rgba(255,241,209,.74) !important;
+  }
+
+  .article.card,
+  .goods.card{
+    background:
+      linear-gradient(180deg, rgba(255,246,226,.94), rgba(239,222,187,.92)) !important;
+    border-color:rgba(244,185,66,.46) !important;
+    box-shadow:
+      0 8px 18px rgba(0,0,0,.16),
+      0 0 14px rgba(244,185,66,.05) !important;
+  }
+}
+</style>
+
+
+<style>
+/* =========================================================
+   COLOR ONLY PATCH
+   レイアウト構造・サイズ・位置は変更しない。
+   対象：記事/日常カードの背景、文字色、ボタンリンク色のみ。
+   ========================================================= */
+
+/* 冒険記・日常カード：夜の世界観に合う、少し暗めの羊皮紙 */
+.article.card,
+.goods.card{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(52, 31, 71, .94) 0%,
+      rgba(38, 22, 56, .96) 100%
+    ) !important;
+  border-color:rgba(244,185,66,.45) !important;
+  outline-color:rgba(244,185,66,.18) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,236,180,.04),
+    0 0 18px rgba(244,185,66,.06) !important;
+}
+
+/* カード内サムネ背景：白浮きを抑える */
+.article .thumb,
+.wallpaper-preview,
+.ar-preview,
+.stamp-strip img,
+.suzuri-strip img{
+  background:rgba(255,246,226,.88) !important;
+  border-color:rgba(244,185,66,.32) !important;
+}
+
+/* 記事タイトル・日常タイトル：クリーム色で可読性を確保 */
+.article h3,
+.goods h3{
+  color:#fff2d2 !important;
+  text-shadow:0 1px 8px rgba(0,0,0,.24) !important;
+}
+
+/* 日付・説明文：少し落ち着いた金寄り */
+.article time,
+.goods p{
+  color:rgba(255,231,178,.78) !important;
+}
+
+/* AR準備中の文字 */
+.ar-preview{
+  color:#6f451d !important;
+}
+
+/* 冒険記下の説明文 */
+.note-actions p{
+  color:rgba(255,241,209,.72) !important;
+}
+
+/* ボタンリンク：暗茶＋金枠でモック寄り */
+.content-board .note-actions .btn-main,
+.goods .btn-main,
+.goods-coming .btn.disabled{
+  background:rgba(58,33,14,.88) !important;
+  color:#fff2d2 !important;
+  border-color:rgba(244,185,66,.62) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,236,180,.05),
+    0 0 12px rgba(244,185,66,.10) !important;
+}
+
+/* hoverも色だけ */
+.content-board .note-actions .btn-main:hover,
+.goods .btn-main:hover{
+  background:rgba(78,45,18,.96) !important;
+  color:#fff8e8 !important;
+  border-color:rgba(244,185,66,.82) !important;
+  box-shadow:0 0 16px rgba(244,185,66,.18) !important;
+}
+
+/* 準備中ボタンは少し沈める */
+.goods-coming .btn.disabled{
+  opacity:.76 !important;
+  background:rgba(58,33,14,.58) !important;
+  color:rgba(255,242,210,.78) !important;
+}
+
+/* セクション内カードのリンク文字が暗くなりすぎる場合の保険 */
+.article.card a,
+.goods.card a{
+  color:inherit !important;
+}
+</style>
+
+
+<style>
+/* =========================================================
+   COLOR / LAYER ONLY PATCH
+   レイアウト構造・サイズ・位置は変更しない。
+   - 二重枠を解消
+   - ボタンを紫背景＋金枠＋金文字へ
+   - 通常時に文字が見えるよう補正
+   - 挑戦状の封筒は必ず背景紙より前面
+   ========================================================= */
+
+/* カード周囲の二重枠を解消：outlineを消して、単一の金枠だけにする */
+.article.card,
+.goods.card{
+  outline:none !important;
+  border:1px solid rgba(244,185,66,.56) !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(43,24,69,.96) 0%,
+      rgba(31,17,51,.97) 100%
+    ) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,240,190,.035),
+    0 0 16px rgba(244,185,66,.08) !important;
+}
+
+/* hover時も二重枠にしない */
+.article.card:hover,
+.goods.card:hover{
+  outline:none !important;
+  border-color:rgba(244,185,66,.78) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,240,190,.045),
+    0 0 18px rgba(244,185,66,.14) !important;
+}
+
+/* サムネや画像枠も強すぎる二重感を抑える */
+.article .thumb,
+.wallpaper-preview,
+.ar-preview,
+.stamp-strip img,
+.suzuri-strip img{
+  outline:none !important;
+  border:1px solid rgba(244,185,66,.28) !important;
+  background:rgba(255,246,226,.90) !important;
+}
+
+/* 通常時に文字が確実に見えるようにする */
+.article h3,
+.goods h3{
+  color:#fff2d2 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  text-shadow:0 1px 8px rgba(0,0,0,.35) !important;
+}
+
+.article time,
+.goods p,
+.note-actions p{
+  color:rgba(255,231,178,.86) !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+
+/* カード内リンク・ボタン文字がhover前に消えないよう保険 */
+.article.card *,
+.goods.card *,
+.note-actions *{
+  opacity:1;
+  visibility:visible;
+}
+
+/* ボタン：金枠＋紫背景＋金文字 */
+.content-board .note-actions .btn-main,
+.goods .btn-main,
+.goods-coming .btn.disabled,
+.quest-shell .btn-main{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(58,35,86,.96),
+      rgba(34,19,58,.96)
+    ) !important;
+  color:#F4B942 !important;
+  border:1.5px solid rgba(244,185,66,.78) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,245,205,.05),
+    0 0 12px rgba(244,185,66,.12) !important;
+  text-shadow:0 1px 6px rgba(0,0,0,.30) !important;
+}
+
+/* hoverしても方向性は変えない */
+.content-board .note-actions .btn-main:hover,
+.goods .btn-main:hover,
+.quest-shell .btn-main:hover{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(72,43,105,.98),
+      rgba(42,24,72,.98)
+    ) !important;
+  color:#ffd36a !important;
+  border-color:rgba(255,211,106,.92) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,245,205,.07),
+    0 0 16px rgba(244,185,66,.20) !important;
+}
+
+/* 準備中ボタンも読める濃度にする */
+.goods-coming .btn.disabled{
+  opacity:.82 !important;
+  color:rgba(244,185,66,.82) !important;
+}
+
+/* 挑戦状の封筒は必ず背景紙より前面。今後ここを入れ替えない */
+#quest .wrap{
+  overflow:visible !important;
+}
+.quest-envelope{
+  position:relative !important;
+  z-index:999 !important;
+  pointer-events:none !important;
+}
+.quest-shell{
+  position:relative !important;
+  z-index:1 !important;
+}
+</style>
+
+
+<style>
+/* === color refinement: darker hero-based purple + button readability === */
+
+/* 背景の紫をヒーロー画像寄りの暗い夜色へ */
+body{
+  background:
+    radial-gradient(circle at 48% 12%, rgba(70,38,118,.22), transparent 34%),
+    radial-gradient(circle at 78% 44%, rgba(185,126,45,.08), transparent 28%),
+    radial-gradient(circle at 22% 72%, rgba(48,25,88,.20), transparent 34%),
+    linear-gradient(
+      180deg,
+      #07040f 0%,
+      #10071d 24%,
+      #180b2c 48%,
+      #0c0616 100%
+    ) !important;
+}
+
+/* コンテンツ背景も暗めの紫グラデーションへ */
+.content-board{
+  background:
+    radial-gradient(circle at 50% 0%, rgba(244,185,66,.10), transparent 28%),
+    radial-gradient(circle at 84% 26%, rgba(88,50,145,.18), transparent 30%),
+    radial-gradient(circle at 12% 70%, rgba(42,20,80,.28), transparent 34%),
+    linear-gradient(
+      180deg,
+      rgba(16,7,29,.98) 0%,
+      rgba(28,13,48,.97) 46%,
+      rgba(12,6,22,.98) 100%
+    ) !important;
+}
+
+/* カード背景も背景に馴染む暗め紫へ */
+.article.card,
+.goods.card{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(36,20,60,.96) 0%,
+      rgba(24,13,42,.98) 100%
+    ) !important;
+}
+
+/* 挑戦状の投稿ボタンは元の茶色背景＋白文字へ */
+.quest-shell .btn-main,
+#quest-share-btn{
+  background:#3a210e !important;
+  color:#fff4d8 !important;
+  border:none !important;
+  box-shadow:0 4px 16px rgba(0,0,0,.30) !important;
+  text-shadow:none !important;
+}
+
+.quest-shell .btn-main:hover,
+#quest-share-btn:hover{
+  background:#4e2d12 !important;
+  color:#fff4d8 !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.38) !important;
+}
+
+/* グッズ系ボタンは金文字で読みやすく */
+.goods .btn-main,
+.goods-coming .btn.disabled{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(58,35,86,.96),
+      rgba(34,19,58,.96)
+    ) !important;
+  color:#F4B942 !important;
+  border:1.5px solid rgba(244,185,66,.78) !important;
+  text-shadow:0 1px 6px rgba(0,0,0,.36) !important;
+}
+
+.goods .btn-main:hover{
+  color:#ffd36a !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(72,43,105,.98),
+      rgba(42,24,72,.98)
+    ) !important;
+}
+</style>
+
+
+<style>
+/* === final small fixes only === */
+
+/* PC版ヒーロー上部の空白を除去 */
+@media(min-width:821px){
+  .hero,
+  .hero .wrap,
+  .hero-card{
+    margin-top:0 !important;
+    padding-top:0 !important;
+  }
+
+  .hero-card{
+    overflow:hidden !important;
+  }
+
+  .hero-bg{
+    top:0 !important;
+  }
+}
+
+/* グッズボタン通常時も金文字で読めるように */
+.goods .btn-main,
+.goods-coming .btn.disabled,
+.goods .btn-main:visited,
+.goods .btn-main:link{
+  color:#F4B942 !important;
+}
+
+/* hover時も維持 */
+.goods .btn-main:hover{
+  color:#ffd36a !important;
+}
+</style>
+
+
+<style>
+/* === remove tiny gap between fixed header and hero === */
+@media(min-width:821px){
+  /* ヘッダーの下線・影がヒーローとの間に細い空白として見えるため、
+     ヒーロー側を1pxだけ上に重ねて隙間を消す */
+  main{
+    margin-top:-1px !important;
+  }
+
+  .hero{
+    margin-top:0 !important;
+    padding-top:0 !important;
+    border-top:0 !important;
+  }
+
+  .hero .wrap,
+  .hero-card{
+    margin-top:0 !important;
+    padding-top:0 !important;
+    border-top:0 !important;
+  }
+
+  .hero-bg{
+    top:-1px !important;
+    height:calc(100% + 1px) !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="magic-aurora" aria-hidden="true"></div>
