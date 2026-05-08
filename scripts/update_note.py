@@ -9,6 +9,23 @@ MAX_ARTICLES = 3
 START_MARKER = "<!-- NOTE_ARTICLES_START -->"
 END_MARKER = "<!-- NOTE_ARTICLES_END -->"
 
+# タイトルからジャンルタグを判定
+GENRE_MAP = [
+    (["ARG"], "ARG"),
+    (["周遊"], "周遊型謎解き"),
+    (["宿泊"], "宿泊型謎解き"),
+    (["VR", "XR"], "VR体験"),
+    (["没入", "チームラボ", "ネイキッド", "アート", "イマーシブ"], "没入型アート"),
+    (["謎解き", "脱出", "SCRAP", "謎"], "謎解き"),
+    (["ガイド", "完全"], "ガイド"),
+]
+
+def get_genre(title: str) -> str:
+    for keywords, label in GENRE_MAP:
+        if any(kw in title for kw in keywords):
+            return label
+    return "体験レポ"
+
 
 def fetch_articles():
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -37,9 +54,12 @@ def build_card(article: dict) -> str:
     )
 
     if thumb:
-        img_tag = f'<img src="{thumb}" alt="{title}" loading="lazy">'
+        img_tag = (
+            f'<img src="{thumb}" alt="{title}" loading="lazy" '
+            f'onerror="this.src=\'assets/hero-door-landscape.jpg\'">'
+        )
     else:
-        img_tag = '<img src="assets/record-lantern-book.jpg" alt="">'
+        img_tag = '<img src="assets/hero-door-landscape.jpg" alt="" loading="lazy">'
 
     return (
         f'<article class="card article" onclick="location.href=\'{url}\'" '
