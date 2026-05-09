@@ -3,719 +3,781 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>旅するうまさんカメラ</title>
+  <title>うまさんARカメラ ｜ 旅するうまさん</title>
   <style>
-    /* ========================
-       CSS 変数・リセット
-    ======================== */
     :root {
-      --gold: #F4B942;
-      --brown: #3E2A1E;
-      --cream: #FFF4E6;
-      --panel-bg: rgba(30, 18, 8, 0.78);
-      --panel-border: rgba(244, 185, 66, 0.22);
+      --gold:         #F4B942;
+      --gold-border:  rgba(244,185,66,0.42);
+      --gold-glow:    rgba(244,185,66,0.22);
+      --text-main:    #fff2d2;
+      --text-sub:     #ffe7b2;
+      --panel-bg:     rgba(12, 5, 24, 0.93);
+      --card-bg:      rgba(36, 18, 72, 0.84);
+      --brown:        #2a1200;
     }
 
     *, *::before, *::after {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
 
-    body {
-      width: 100vw;
-      height: 100vh;
+    html, body {
+      width: 100%; height: 100%;
       overflow: hidden;
       background: #000;
-      font-family: 'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', sans-serif;
+      font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", system-ui, sans-serif;
     }
 
-    /* ========================
-       カメラ映像（背景）
-    ======================== */
+    /* ── Camera video ── */
     #video {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
       object-fit: cover;
       z-index: 1;
     }
 
-    /* ========================
-       うまさん（ドラッグ対象）
-    ======================== */
+    /* ── Full-screen preview (post-capture) ── */
+    #preview-full {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 8;
+      display: none;
+    }
+    #preview-full.visible { display: block; }
+
+    /* ── Umasan ── */
     #umasan {
       position: fixed;
-      width: 160px;
-      height: auto;
+      width: 160px; height: auto;
       cursor: grab;
-      z-index: 3;
-      touch-action: none;   /* ブラウザのスクロールを抑制 */
+      z-index: 10;
+      touch-action: none;
       -webkit-user-drag: none;
+      transform-origin: center center;
+    }
+    #umasan:active  { cursor: grabbing; }
+    #umasan.hidden  { display: none; }
+
+    /* ── Sparkles (CSS-only, very subtle) ── */
+    #sparkle-layer {
+      position: fixed; inset: 0;
+      z-index: 9; pointer-events: none; overflow: hidden;
+    }
+    .sp {
+      position: absolute;
+      width: 3px; height: 3px;
+      background: #ffd23f;
+      border-radius: 50%;
+      box-shadow: 0 0 5px 1px rgba(255,210,63,0.75);
+      opacity: 0;
+      animation: sp-rise linear infinite;
+    }
+    @keyframes sp-rise {
+      0%   { transform: translate(0,0) scale(0); opacity: 0; }
+      8%   { opacity: 0.85; transform: translate(4px,-22px) scale(1); }
+      75%  { opacity: 0.3; }
+      100% { transform: translate(12px,-280px) scale(0); opacity: 0; }
     }
 
-    #umasan:active {
-      cursor: grabbing;
+    /* ── Header ── */
+    #header {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 60px;
+      z-index: 40;
+      background: linear-gradient(180deg, rgba(18,6,8,0.95) 0%, rgba(28,10,10,0.88) 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gold-border);
+      display: flex; align-items: center;
+      padding: 0 12px; gap: 10px;
     }
 
-    /* ========================
-       上部オーバーレイ（グラデーション + メッセージ + 切替ボタン）
-    ======================== */
-    #top-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 20px 16px 48px;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.58) 0%, transparent 100%);
-      z-index: 4;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      pointer-events: none;   /* メッセージ領域はタップ透過 */
+    #back-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(244,185,66,0.1);
+      border: 1.5px solid var(--gold-border);
+      color: var(--gold); font-size: 20px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; text-decoration: none; flex-shrink: 0;
+      transition: background 0.15s;
     }
+    #back-btn:active { background: rgba(244,185,66,0.26); }
 
-    #status-message {
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.75);
-      padding-top: 10px;
-      padding-left: 4px;
-      flex: 1;
-      line-height: 1.5;
+    #header-text { flex: 1; min-width: 0; }
+    #header-title {
+      font-size: 15px; font-weight: 700;
+      color: var(--text-main); letter-spacing: 0.07em;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    #header-sub {
+      font-size: 9px; color: var(--gold);
+      letter-spacing: 0.09em; opacity: 0.8;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
     #flip-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.45);
-      border: 1.5px solid rgba(255, 255, 255, 0.3);
-      color: #fff;
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      pointer-events: all;   /* ボタンだけタップ有効 */
-      flex-shrink: 0;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(244,185,66,0.1);
+      border: 1.5px solid var(--gold-border);
+      color: var(--text-main); font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
       transition: background 0.15s;
     }
+    #flip-btn:active { background: rgba(244,185,66,0.26); }
 
-    #flip-btn:active {
-      background: rgba(244, 185, 66, 0.35);
-    }
-
-    /* ========================
-       下部パネル（半透明・固定）
-    ======================== */
-    #bottom-panel {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: var(--panel-bg);
-      border-top: 1.5px solid var(--panel-border);
-      border-radius: 24px 24px 0 0;
-      z-index: 5;
-      padding: 16px 20px;
-      /* iOS ホームバー対応 */
-      padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-    }
-
-    /* ========================
-       ポーズ選択（横スクロール）
-    ======================== */
-    #pose-selector {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      margin-bottom: 14px;
-      scrollbar-width: none;
-    }
-
-    #pose-selector::-webkit-scrollbar {
-      display: none;
-    }
-
-    .pose-thumb {
-      flex-shrink: 0;
-      width: 62px;
-      height: 62px;
-      border-radius: 14px;
-      border: 2.5px solid rgba(255, 255, 255, 0.15);
-      background: rgba(255, 255, 255, 0.08);
+    /* ── Reset button (right side, vertical center) ── */
+    #reset-btn {
+      position: fixed; right: 14px; top: 50%;
+      transform: translateY(-50%);
+      z-index: 35;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(12, 5, 24, 0.72);
+      border: 1.5px solid var(--gold-border);
+      color: var(--gold); font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      font-size: 28px;   /* 画像失敗時の絵文字サイズ */
+      transition: background 0.15s;
+    }
+    #reset-btn:active { background: rgba(244,185,66,0.26); }
+    #reset-btn.hidden  { display: none; }
+
+    /* ── Bottom controls (always on top) ── */
+    #bottom-controls {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      z-index: 40;
+      padding: 12px 20px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      background: linear-gradient(to top,
+        rgba(12,5,24,0.92) 0%,
+        rgba(12,5,24,0.72) 55%,
+        transparent 100%);
     }
 
-    .pose-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      pointer-events: none;
-    }
-
-    /* 選択中はゴールド枠 */
-    .pose-thumb.selected {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 2.5px rgba(244, 185, 66, 0.32);
-    }
-
-    /* ========================
-       ボタン行
-    ======================== */
+    /* Main action row */
     #btn-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
+      gap: 22px; margin-bottom: 10px;
+    }
+
+    /* Secondary buttons: save / X */
+    .btn-sec {
+      width: 54px; height: 54px; border-radius: 50%;
+      background: var(--card-bg);
+      border: 1.5px solid var(--gold-border);
+      color: var(--text-sub); font-size: 17px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 3px;
+      cursor: pointer; flex-shrink: 0;
+      transition: opacity 0.18s, background 0.15s;
+    }
+    .btn-sec:disabled { opacity: 0.28; cursor: not-allowed; }
+    .btn-sec:not(:disabled):active { background: rgba(244,185,66,0.2); }
+    .btn-sec-lbl {
+      font-size: 9px; color: rgba(255,227,178,0.72);
+      letter-spacing: 0.04em; line-height: 1;
+    }
+
+    /* Capture button (primary) */
+    #btn-capture {
+      width: 74px; height: 74px; border-radius: 50%;
+      background: var(--gold);
+      border: 3px solid #d9a234;
+      color: #2a1200; font-size: 28px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      box-shadow: 0 0 0 5px var(--gold-glow), 0 4px 22px rgba(244,185,66,0.42);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    #btn-capture:active {
+      transform: scale(0.9);
+      box-shadow: 0 0 0 2px var(--gold-glow);
+    }
+
+    /* Retake button */
+    #btn-retake {
+      display: none;
+      width: 74px; height: 74px; border-radius: 50%;
+      background: var(--card-bg);
+      border: 2px solid var(--gold-border);
+      color: var(--text-sub);
+      font-size: 11px; font-weight: 700; font-family: inherit;
+      letter-spacing: 0.04em;
+      align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      text-align: center; line-height: 1.35;
+      transition: background 0.15s;
+    }
+    #btn-retake.visible { display: flex; }
+    #btn-retake:active { background: rgba(244,185,66,0.2); }
+
+    /* Pose toggle button row */
+    #pose-toggle-row {
+      display: flex; align-items: center; justify-content: center;
+    }
+    #pose-toggle-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 7px; height: 40px; padding: 0 24px;
+      border-radius: 50px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--gold-border);
+      color: var(--gold);
+      font-size: 13px; font-family: inherit;
+      font-weight: 700; letter-spacing: 0.09em;
+      cursor: pointer; min-width: 180px;
+      transition: background 0.15s;
+    }
+    #pose-toggle-btn:active { background: rgba(244,185,66,0.2); }
+    #pose-toggle-btn.hidden { display: none; }
+
+    /* ── Pose panel (drawer, behind bottom-controls) ── */
+    #pose-panel {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      z-index: 35;                  /* above umasan, below bottom-controls (40) */
+      background: var(--panel-bg);
+      border-top: 1.5px solid var(--gold-border);
+      border-radius: 20px 20px 0 0;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 -4px 32px rgba(0,0,0,0.55);
+      padding: 12px 16px;
+      /* bottom-controls height: set by JS via --btm-h */
+      padding-bottom: calc(var(--btm-h, 110px) + env(safe-area-inset-bottom, 0px) + 8px);
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.34, 1.04, 0.64, 1);
+    }
+    #pose-panel.open { transform: translateY(0); }
+
+    .panel-handle {
+      width: 36px; height: 4px;
+      background: rgba(244,185,66,0.28);
+      border-radius: 2px;
+      margin: 0 auto 12px;
+    }
+
+    #pose-panel-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    #pose-panel-title {
+      font-size: 12px; font-weight: 700;
+      color: var(--gold); letter-spacing: 0.12em;
+    }
+    #pose-panel-close {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(244,185,66,0.1);
+      border: 1px solid rgba(244,185,66,0.32);
+      color: var(--gold); font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #pose-panel-close:active { background: rgba(244,185,66,0.26); }
+
+    .deco-line {
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(244,185,66,0.5) 25%,
+        rgba(244,185,66,0.5) 75%,
+        transparent);
       margin-bottom: 12px;
     }
 
-    /* 保存・X投稿ボタン（小） */
-    #btn-save,
-    #btn-x {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.22);
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.2s, background 0.15s;
+    #pose-selector {
+      display: flex; gap: 10px;
+      overflow-x: auto; padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    #pose-selector::-webkit-scrollbar { display: none; }
+
+    .pose-thumb {
       flex-shrink: 0;
-    }
-
-    #btn-save:disabled,
-    #btn-x:disabled {
-      opacity: 0.32;
-      cursor: not-allowed;
-    }
-
-    #btn-save:not(:disabled):active,
-    #btn-x:not(:disabled):active {
-      background: rgba(244, 185, 66, 0.28);
-    }
-
-    /* 撮影ボタン（大・中央） */
-    #btn-capture {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      border: 3.5px solid var(--gold);
-      background: var(--gold);
-      color: var(--brown);
+      width: 68px; height: 68px; border-radius: 14px;
+      border: 2px solid rgba(244,185,66,0.18);
+      background: rgba(36, 18, 72, 0.55);
+      cursor: pointer; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.15s, box-shadow 0.15s;
       font-size: 28px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 28px;
-      box-shadow: 0 0 0 5px rgba(244, 185, 66, 0.2);
-      transition: transform 0.1s, box-shadow 0.1s;
-      flex-shrink: 0;
+    }
+    .pose-thumb img {
+      width: 100%; height: 100%;
+      object-fit: contain; pointer-events: none;
+    }
+    .pose-thumb.selected {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(244,185,66,0.28),
+                  0 0 14px rgba(244,185,66,0.5);
     }
 
-    #btn-capture:active {
-      transform: scale(0.91);
-      box-shadow: 0 0 0 2px rgba(244, 185, 66, 0.25);
-    }
-
-    /* ========================
-       撮影後プレビュー
-    ======================== */
-    #preview-section {
-      display: none;
-      flex-direction: row;
-      align-items: center;
-      gap: 12px;
-      padding-top: 4px;
-    }
-
-    #preview-section.visible {
-      display: flex;
-    }
-
-    #preview-img {
-      height: 72px;
-      width: auto;
-      max-width: 120px;
-      border-radius: 10px;
-      border: 1.5px solid var(--panel-border);
-      object-fit: cover;
-      flex-shrink: 0;
-    }
-
-    #btn-retake {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1.5px solid rgba(255, 255, 255, 0.28);
-      color: #fff;
-      font-size: 13px;
-      padding: 8px 20px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-family: inherit;
-      white-space: nowrap;
-      transition: background 0.15s;
-    }
-
-    #btn-retake:active {
-      background: rgba(255, 255, 255, 0.22);
-    }
-
-    /* ========================
-       フラッシュ演出
-    ======================== */
+    /* ── Flash ── */
     #flash {
-      position: fixed;
-      inset: 0;
-      background: #fff;
-      z-index: 99;
-      opacity: 0;
-      pointer-events: none;
+      position: fixed; inset: 0;
+      background: #fff; z-index: 99;
+      opacity: 0; pointer-events: none;
       transition: opacity 0.06s ease-in-out;
     }
+    #flash.on { opacity: 1; }
 
-    #flash.on {
-      opacity: 1;
-    }
-
-    /* ========================
-       エラーメッセージ
-    ======================== */
+    /* ── Error ── */
     #error-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: rgba(0, 0, 0, 0.7);
-      align-items: center;
-      justify-content: center;
+      display: none; position: fixed; inset: 0;
+      z-index: 200; background: rgba(0,0,0,0.72);
+      align-items: center; justify-content: center;
     }
-
-    #error-overlay.visible {
-      display: flex;
-    }
-
+    #error-overlay.visible { display: flex; }
     #error-box {
-      background: #1a1008;
-      color: #fff;
-      font-size: 15px;
-      text-align: center;
-      padding: 28px 32px;
-      border-radius: 20px;
-      border: 1.5px solid rgba(244, 185, 66, 0.4);
-      line-height: 1.8;
-      max-width: 300px;
+      background: rgba(12,5,24,0.97);
+      color: var(--text-main);
+      font-size: 15px; text-align: center;
+      padding: 28px 32px; border-radius: 20px;
+      border: 1.5px solid rgba(244,185,66,0.45);
+      line-height: 1.8; max-width: 300px;
+      white-space: pre-line;
     }
 
-    /* 非表示キャンバス（撮影合成用） */
-    #canvas {
-      display: none;
-    }
+    /* ── Hidden canvas ── */
+    #canvas { display: none; }
   </style>
 </head>
 <body>
 
-<!-- ■ カメラ映像（背景フルスクリーン） -->
 <video id="video" autoplay playsinline muted></video>
-
-<!-- ■ 合成用キャンバス（非表示） -->
+<img id="preview-full" alt="撮影プレビュー">
 <canvas id="canvas"></canvas>
-
-<!-- ■ フラッシュ演出レイヤー -->
 <div id="flash"></div>
+<div id="sparkle-layer"></div>
 
-<!-- ■ うまさん（ドラッグ・ピンチ操作） -->
-<img id="umasan" src="umasan1.png" alt="うまさん" draggable="false">
+<img id="umasan" src="assets/camera_umasan1.png" crossorigin="anonymous" alt="うまさん" draggable="false">
 
-<!-- ■ 上部オーバーレイ -->
-<div id="top-overlay">
-  <div id="status-message">うまさんを好きな場所に置いてね🐴</div>
+<!-- Header -->
+<header id="header">
+  <a href="index.html" id="back-btn"
+     onclick="if(history.length>1){event.preventDefault();history.back()}">←</a>
+  <div id="header-text">
+    <div id="header-title">うまさんARカメラ</div>
+    <div id="header-sub">今日の景色に、うまさんを連れていこう。</div>
+  </div>
   <button id="flip-btn" title="カメラ切り替え">🔄</button>
-</div>
+</header>
 
-<!-- ■ エラー表示 -->
-<div id="error-overlay">
-  <div id="error-box"></div>
-</div>
+<!-- Reset -->
+<button id="reset-btn" title="位置をリセット">↺</button>
 
-<!-- ■ 下部パネル -->
-<div id="bottom-panel">
+<!-- Error -->
+<div id="error-overlay"><div id="error-box"></div></div>
 
-  <!-- 1. ポーズ選択（横スクロール） -->
+<!-- Pose panel (drawer) -->
+<div id="pose-panel">
+  <div class="panel-handle"></div>
+  <div id="pose-panel-head">
+    <span id="pose-panel-title">うまさんを選ぶ</span>
+    <button id="pose-panel-close">✕</button>
+  </div>
+  <div class="deco-line"></div>
   <div id="pose-selector">
-    <div class="pose-thumb selected" data-pose="1" data-src="umasan1.png">
-      <img src="umasan1.png" alt="ポーズ1" onerror="this.parentNode.innerHTML='🐴'">
+    <div class="pose-thumb selected" data-src="assets/camera_umasan1.png">
+      <img src="assets/camera_umasan1.png" alt="" onerror="this.parentNode.textContent='🐴'">
     </div>
-    <div class="pose-thumb" data-pose="2" data-src="umasan2.png">
-      <img src="umasan2.png" alt="ポーズ2" onerror="this.parentNode.innerHTML='🐎'">
+    <div class="pose-thumb" data-src="assets/camera_umasan2.png">
+      <img src="assets/camera_umasan2.png" alt="" onerror="this.parentNode.textContent='🐎'">
     </div>
-    <div class="pose-thumb" data-pose="3" data-src="umasan3.png">
-      <img src="umasan3.png" alt="ポーズ3" onerror="this.parentNode.innerHTML='🏇'">
+    <div class="pose-thumb" data-src="assets/camera_umasan3.png">
+      <img src="assets/camera_umasan3.png" alt="" onerror="this.parentNode.textContent='🏇'">
     </div>
-    <div class="pose-thumb" data-pose="4" data-src="umasan4.png">
-      <img src="umasan4.png" alt="ポーズ4" onerror="this.parentNode.innerHTML='🌟'">
+    <div class="pose-thumb" data-src="assets/camera_umasan4.png">
+      <img src="assets/camera_umasan4.png" alt="" onerror="this.parentNode.textContent='🌟'">
     </div>
   </div>
+</div>
 
-  <!-- 2. ボタン行 -->
+<!-- Bottom controls -->
+<div id="bottom-controls">
   <div id="btn-row">
-    <button id="btn-save" disabled title="保存">💾</button>
+    <button class="btn-sec" id="btn-save" disabled>
+      <span>💾</span>
+      <span class="btn-sec-lbl">保存</span>
+    </button>
+
     <button id="btn-capture" title="撮影">📷</button>
-    <button id="btn-x" disabled title="Xに投稿">𝕏</button>
-  </div>
+    <button id="btn-retake">もう一度<br>撮る</button>
 
-  <!-- 3. 撮影後プレビュー（撮影後に表示） -->
-  <div id="preview-section">
-    <img id="preview-img" alt="撮影プレビュー">
-    <button id="btn-retake">もう一度撮る</button>
+    <button class="btn-sec" id="btn-x" disabled>
+      <span style="font-size:15px;font-weight:900;">𝕏</span>
+      <span class="btn-sec-lbl">シェア</span>
+    </button>
   </div>
-
+  <div id="pose-toggle-row">
+    <button id="pose-toggle-btn">
+      <span>🐴</span>
+      <span>うまさんを選ぶ</span>
+      <span id="pose-arrow" style="font-size:10px;">▲</span>
+    </button>
+  </div>
 </div>
 
 <script>
-  // ================================================================
-  // 状態変数
-  // ================================================================
-  let stream       = null;
-  let facingMode   = 'environment';  // 背面カメラ優先
-  let capturedUrl  = null;           // 撮影済み DataURL
+/* ================================================================
+   State
+================================================================ */
+let stream      = null;
+let facingMode  = 'environment';
+let capturedUrl = null;
+let poseOpen    = false;
 
-  // うまさんの位置・スケール（px 基準）
-  let uX = 0, uY = 0;
-  let uScale = 1.0;
-  const U_BASE = 160;   // 初期サイズ
+const U_BASE = 160;
+let uX = 0, uY = 0, uScale = 1.0, uRot = 0;
 
-  // ================================================================
-  // DOM 参照
-  // ================================================================
-  const video          = document.getElementById('video');
-  const canvas         = document.getElementById('canvas');
-  const ctx            = canvas.getContext('2d');
-  const umasanEl       = document.getElementById('umasan');
-  const flashEl        = document.getElementById('flash');
-  const statusMsg      = document.getElementById('status-message');
-  const flipBtn        = document.getElementById('flip-btn');
-  const btnSave        = document.getElementById('btn-save');
-  const btnCapture     = document.getElementById('btn-capture');
-  const btnX           = document.getElementById('btn-x');
-  const previewSection = document.getElementById('preview-section');
-  const previewImg     = document.getElementById('preview-img');
-  const btnRetake      = document.getElementById('btn-retake');
-  const errorOverlay   = document.getElementById('error-overlay');
-  const errorBox       = document.getElementById('error-box');
-  const poseSelector   = document.getElementById('pose-selector');
+// umasanElがdivの場合は内部のimgを、imgそのものの場合はそのまま返す
+const getUmasanImg = () => umasanEl.querySelector('img') || umasanEl;
 
-  // ================================================================
-  // カメラ起動 / 切替
-  // ================================================================
-  async function startCamera(facing) {
-    // 既存のストリームを停止
-    if (stream) {
-      stream.getTracks().forEach(t => t.stop());
-      stream = null;
-    }
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: facing },
-          width:  { ideal: 1920 },
-          height: { ideal: 1080 }
-        },
-        audio: false
-      });
-      video.srcObject = stream;
-      await video.play();
-    } catch (err) {
-      showError(
-        'カメラを起動できませんでした📷\n\n' +
-        'カメラの使用を許可してから\nページを再読み込みしてください。'
-      );
-    }
-  }
+/* ================================================================
+   DOM
+================================================================ */
+const video          = document.getElementById('video');
+const previewFull    = document.getElementById('preview-full');
+const canvas         = document.getElementById('canvas');
+const ctx            = canvas.getContext('2d');
+const umasanEl       = document.getElementById('umasan');
+const flashEl        = document.getElementById('flash');
+const flipBtn        = document.getElementById('flip-btn');
+const btnSave        = document.getElementById('btn-save');
+const btnCapture     = document.getElementById('btn-capture');
+const btnX           = document.getElementById('btn-x');
+const btnRetake      = document.getElementById('btn-retake');
+const resetBtn       = document.getElementById('reset-btn');
+const errorOverlay   = document.getElementById('error-overlay');
+const errorBox       = document.getElementById('error-box');
+const posePanel      = document.getElementById('pose-panel');
+const posePanelClose = document.getElementById('pose-panel-close');
+const poseToggleBtn  = document.getElementById('pose-toggle-btn');
+const poseArrow      = document.getElementById('pose-arrow');
+const poseSelector   = document.getElementById('pose-selector');
 
-  function showError(msg) {
-    errorBox.textContent = msg;
-    errorOverlay.classList.add('visible');
-  }
-
-  // エラーオーバーレイをタップで閉じる
-  errorOverlay.addEventListener('click', () => {
-    errorOverlay.classList.remove('visible');
-  });
-
-  // ================================================================
-  // うまさん 初期位置（画面中央）
-  // ================================================================
-  function centerUmasan() {
-    uX = (window.innerWidth  - U_BASE * uScale) / 2;
-    uY = (window.innerHeight - U_BASE * uScale) / 2;
-    applyUmasanStyle();
-  }
-
-  function applyUmasanStyle() {
-    umasanEl.style.width  = (U_BASE * uScale) + 'px';
-    umasanEl.style.left   = uX + 'px';
-    umasanEl.style.top    = uY + 'px';
-  }
-
-  // ================================================================
-  // ドラッグ操作（mouse）
-  // ================================================================
-  let dragging = false;
-  let dragSX = 0, dragSY = 0, imgSX = 0, imgSY = 0;
-
-  umasanEl.addEventListener('mousedown', e => {
-    e.preventDefault();
-    dragging = true;
-    dragSX = e.clientX;
-    dragSY = e.clientY;
-    imgSX  = uX;
-    imgSY  = uY;
-  });
-
-  window.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    uX = imgSX + (e.clientX - dragSX);
-    uY = imgSY + (e.clientY - dragSY);
-    applyUmasanStyle();
-  });
-
-  window.addEventListener('mouseup', () => { dragging = false; });
-
-  // ================================================================
-  // タッチ操作（ドラッグ＋ピンチ）
-  // ================================================================
-  let touchDragging = false;
-  let pinching      = false;
-  let pinchStartDist  = 0;
-  let pinchStartScale = 1;
-
-  function touchDist(t1, t2) {
-    const dx = t1.clientX - t2.clientX;
-    const dy = t1.clientY - t2.clientY;
-    return Math.hypot(dx, dy);
-  }
-
-  umasanEl.addEventListener('touchstart', e => {
-    e.preventDefault();
-    if (e.touches.length >= 2) {
-      // ピンチ開始
-      pinching       = true;
-      touchDragging  = false;
-      pinchStartDist  = touchDist(e.touches[0], e.touches[1]);
-      pinchStartScale = uScale;
-    } else {
-      // 1本指ドラッグ開始
-      pinching      = false;
-      touchDragging = true;
-      dragSX = e.touches[0].clientX;
-      dragSY = e.touches[0].clientY;
-      imgSX  = uX;
-      imgSY  = uY;
-    }
-  }, { passive: false });
-
-  window.addEventListener('touchmove', e => {
-    if (pinching && e.touches.length >= 2) {
-      e.preventDefault();
-      const dist = touchDist(e.touches[0], e.touches[1]);
-      uScale = Math.max(0.25, Math.min(4.5, pinchStartScale * dist / pinchStartDist));
-      applyUmasanStyle();
-    } else if (touchDragging && e.touches.length === 1) {
-      uX = imgSX + (e.touches[0].clientX - dragSX);
-      uY = imgSY + (e.touches[0].clientY - dragSY);
-      applyUmasanStyle();
-    }
-  }, { passive: false });
-
-  window.addEventListener('touchend', e => {
-    if (e.touches.length < 2) pinching      = false;
-    if (e.touches.length === 0) touchDragging = false;
-  });
-
-  // ================================================================
-  // ポーズ選択
-  // ================================================================
-  poseSelector.addEventListener('click', e => {
-    const thumb = e.target.closest('.pose-thumb');
-    if (!thumb) return;
-    document.querySelectorAll('.pose-thumb').forEach(t => t.classList.remove('selected'));
-    thumb.classList.add('selected');
-    umasanEl.src = thumb.dataset.src;
-  });
-
-  // ================================================================
-  // カメラ前面/背面 切替
-  // ================================================================
-  flipBtn.addEventListener('click', () => {
-    facingMode = facingMode === 'environment' ? 'user' : 'environment';
-    startCamera(facingMode);
-  });
-
-  // ================================================================
-  // フラッシュ演出（120ms 点滅）
-  // ================================================================
-  function triggerFlash() {
-    return new Promise(resolve => {
-      flashEl.classList.add('on');
-      setTimeout(() => {
-        flashEl.classList.remove('on');
-        setTimeout(resolve, 60);
-      }, 120);
+/* ================================================================
+   Camera
+================================================================ */
+async function startCamera(facing) {
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: facing }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+      audio: false
     });
+    video.srcObject = stream;
+    await video.play();
+  } catch {
+    showError('カメラを起動できませんでした📷\n\nカメラの使用を許可してから\nページを再読み込みしてください。');
+  }
+}
+
+function showError(msg) {
+  errorBox.textContent = msg;
+  errorOverlay.classList.add('visible');
+}
+errorOverlay.addEventListener('click', () => errorOverlay.classList.remove('visible'));
+
+/* ================================================================
+   Umasan transform
+================================================================ */
+function centerUmasan() {
+  uX = (window.innerWidth  - U_BASE) / 2;
+  uY = window.innerHeight * 0.54 - U_BASE / 2;
+  uScale = 1.0;
+  uRot   = 0;
+  applyT();
+}
+
+function applyT() {
+  umasanEl.style.left      = uX + 'px';
+  umasanEl.style.top       = uY + 'px';
+  umasanEl.style.width     = U_BASE + 'px';
+  umasanEl.style.transform = `scale(${uScale}) rotate(${uRot}deg)`;
+}
+
+/* ================================================================
+   Mouse drag + wheel (PC)
+================================================================ */
+let mDrag = false, mSX = 0, mSY = 0, mIX = 0, mIY = 0;
+
+umasanEl.addEventListener('mousedown', e => {
+  e.preventDefault();
+  mDrag = true;
+  mSX = e.clientX; mSY = e.clientY;
+  mIX = uX;        mIY = uY;
+  umasanEl.style.cursor = 'grabbing';
+});
+window.addEventListener('mousemove', e => {
+  if (!mDrag) return;
+  uX = mIX + (e.clientX - mSX);
+  uY = mIY + (e.clientY - mSY);
+  applyT();
+});
+window.addEventListener('mouseup', () => {
+  mDrag = false;
+  umasanEl.style.cursor = 'grab';
+});
+window.addEventListener('wheel', e => {
+  e.preventDefault();
+  uScale = Math.max(0.15, Math.min(5, uScale * (e.deltaY < 0 ? 1.09 : 0.92)));
+  applyT();
+}, { passive: false });
+
+/* ================================================================
+   Touch: drag (1 finger) + pinch/rotate (2 fingers)
+================================================================ */
+let tDrag = false, tPinch = false;
+let tSX = 0, tSY = 0, tIX = 0, tIY = 0;
+let pDist0 = 0, pScale0 = 1, pAng0 = 0, pRot0 = 0;
+
+const tdist = (a, b) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+const tang  = (a, b) => Math.atan2(b.clientY - a.clientY, b.clientX - a.clientX) * 180 / Math.PI;
+
+umasanEl.addEventListener('touchstart', e => {
+  e.preventDefault();
+  if (e.touches.length >= 2) {
+    tPinch = true; tDrag = false;
+    pDist0  = tdist(e.touches[0], e.touches[1]);
+    pScale0 = uScale;
+    pAng0   = tang(e.touches[0], e.touches[1]);
+    pRot0   = uRot;
+  } else {
+    tDrag = true; tPinch = false;
+    tSX = e.touches[0].clientX; tSY = e.touches[0].clientY;
+    tIX = uX; tIY = uY;
+  }
+}, { passive: false });
+
+window.addEventListener('touchmove', e => {
+  if (tPinch && e.touches.length >= 2) {
+    e.preventDefault();
+    uScale = Math.max(0.15, Math.min(5, pScale0 * tdist(e.touches[0], e.touches[1]) / pDist0));
+    uRot   = pRot0 + tang(e.touches[0], e.touches[1]) - pAng0;
+    applyT();
+  } else if (tDrag && e.touches.length === 1) {
+    uX = tIX + (e.touches[0].clientX - tSX);
+    uY = tIY + (e.touches[0].clientY - tSY);
+    applyT();
+  }
+}, { passive: false });
+
+window.addEventListener('touchend', e => {
+  if (e.touches.length < 2) tPinch = false;
+  if (e.touches.length === 0) tDrag = false;
+});
+
+/* ================================================================
+   Pose panel
+================================================================ */
+function openPanel() {
+  poseOpen = true;
+  posePanel.classList.add('open');
+  poseArrow.textContent = '▼';
+}
+function closePanel() {
+  poseOpen = false;
+  posePanel.classList.remove('open');
+  poseArrow.textContent = '▲';
+}
+
+poseToggleBtn.addEventListener('click', () => poseOpen ? closePanel() : openPanel());
+posePanelClose.addEventListener('click', closePanel);
+
+poseSelector.addEventListener('click', e => {
+  const thumb = e.target.closest('.pose-thumb');
+  if (!thumb) return;
+  document.querySelectorAll('.pose-thumb').forEach(t => t.classList.remove('selected'));
+  thumb.classList.add('selected');
+  umasanEl.src = thumb.dataset.src;
+  closePanel();
+});
+
+/* ================================================================
+   Camera flip / reset
+================================================================ */
+flipBtn.addEventListener('click', () => {
+  facingMode = facingMode === 'environment' ? 'user' : 'environment';
+  startCamera(facingMode);
+});
+resetBtn.addEventListener('click', centerUmasan);
+
+/* ================================================================
+   Flash
+================================================================ */
+function doFlash() {
+  return new Promise(ok => {
+    flashEl.classList.add('on');
+    setTimeout(() => { flashEl.classList.remove('on'); setTimeout(ok, 60); }, 120);
+  });
+}
+
+/* ================================================================
+   Capture
+================================================================ */
+btnCapture.addEventListener('click', async () => {
+  await doFlash();
+
+  const vW = video.videoWidth  || video.clientWidth;
+  const vH = video.videoHeight || video.clientHeight;
+  const dW = window.innerWidth;
+  const dH = window.innerHeight;
+
+  const vAsp = vW / vH, dAsp = dW / dH;
+  let srcX, srcY, srcW, srcH;
+  if (vAsp > dAsp) {
+    srcH = vH; srcW = vH * dAsp; srcX = (vW - srcW) / 2; srcY = 0;
+  } else {
+    srcW = vW; srcH = vW / dAsp; srcX = 0; srcY = (vH - srcH) / 2;
   }
 
-  // ================================================================
-  // 撮影処理
-  // object-fit: cover のクロップ範囲を正しく計算して canvas に合成
-  // ================================================================
-  btnCapture.addEventListener('click', async () => {
-    await triggerFlash();
+  canvas.width = dW; canvas.height = dH;
 
-    // video の実解像度
-    const vW = video.videoWidth  || video.clientWidth;
-    const vH = video.videoHeight || video.clientHeight;
+  // カメラ映像を描画
+  ctx.drawImage(video, srcX, srcY, srcW, srcH, 0, 0, dW, dH);
 
-    // 画面の表示サイズ
-    const dW = window.innerWidth;
-    const dH = window.innerHeight;
-
-    // object-fit: cover のクロップ計算
-    // --- カメラ映像のアスペクト比が画面より横長 → 左右をクロップ
-    // --- 縦長の場合は上下をクロップ
-    const vAsp = vW / vH;
-    const dAsp = dW / dH;
-    let srcX, srcY, srcW, srcH;
-
-    if (vAsp > dAsp) {
-      srcH = vH;
-      srcW = vH * dAsp;
-      srcX = (vW - srcW) / 2;
-      srcY = 0;
-    } else {
-      srcW = vW;
-      srcH = vW / dAsp;
-      srcX = 0;
-      srcY = (vH - srcH) / 2;
-    }
-
-    // canvas を表示サイズに合わせる
-    canvas.width  = dW;
-    canvas.height = dH;
-
-    // ① カメラ映像を描画
-    ctx.drawImage(video, srcX, srcY, srcW, srcH, 0, 0, dW, dH);
-
-    // ② うまさんを重ねて描画
-    const uImg = new Image();
-    uImg.crossOrigin = 'anonymous';
-
-    uImg.onload = () => {
-      const uW = U_BASE * uScale;
-      // 元画像のアスペクト比を維持した高さ
-      const uH = uW * (uImg.naturalHeight / uImg.naturalWidth);
-      ctx.drawImage(uImg, uX, uY, uW, uH);
-      finishCapture();
-    };
-
-    uImg.onerror = () => {
-      // うまさん画像が読めなくてもカメラ映像だけ保存
-      finishCapture();
-    };
-
-    uImg.src = umasanEl.src;
-  });
-
-  function finishCapture() {
-    capturedUrl = canvas.toDataURL('image/jpeg', 0.92);
-
-    // プレビュー表示
-    previewImg.src = capturedUrl;
-    previewSection.classList.add('visible');
-
-    // 状態更新
-    statusMsg.textContent = '今日の冒険、撮れたよ🐴';
-    btnSave.disabled = false;
-    btnX.disabled    = false;
+  // うまさんを描画（divの中のimgまたはimg本体を取得して直接描画）
+  const uImg = getUmasanImg();
+  if (uImg && uImg.tagName === 'IMG' && uImg.complete && uImg.naturalWidth > 0) {
+    const drawH = U_BASE * (uImg.naturalHeight / uImg.naturalWidth);
+    const cx = uX + U_BASE / 2;
+    const cy = uY + drawH / 2;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(uRot * Math.PI / 180);
+    ctx.scale(uScale, uScale);
+    ctx.drawImage(uImg, -U_BASE / 2, -drawH / 2, U_BASE, drawH);
+    ctx.restore();
   }
 
-  // ================================================================
-  // 保存処理（iOS: 新タブで長押し保存 / その他: ダウンロード）
-  // ================================================================
-  btnSave.addEventListener('click', () => {
-    if (!capturedUrl) return;
+  finishCapture();
+});
 
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if (isIOS) {
-      const win = window.open('', '_blank');
-      win.document.write(
-        '<html><head><meta name="viewport" content="width=device-width">' +
-        '<title>うまさん写真</title></head>' +
-        '<body style="margin:0;background:#000;display:flex;flex-direction:column;' +
-        'align-items:center;justify-content:center;min-height:100vh;">' +
-        '<img src="' + capturedUrl + '" style="max-width:100%;">' +
-        '<p style="color:#fff;font-size:14px;margin-top:16px;text-align:center;' +
-        'padding:0 20px;line-height:1.8;">画像を長押しして<br>「写真に追加」で保存してね🐴</p>' +
-        '</body></html>'
-      );
-      win.document.close();
-    } else {
-      const a = document.createElement('a');
-      a.download = 'umasan_' + Date.now() + '.jpg';
-      a.href     = capturedUrl;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+function finishCapture() {
+  try {
+    capturedUrl = canvas.toDataURL('image/png');
+  } catch (e) {
+    // CORSエラーの場合はJPEGで再試行
+    try {
+      capturedUrl = canvas.toDataURL('image/jpeg', 0.92);
+    } catch (e2) {
+      capturedUrl = null;
+      console.warn('toDataURL失敗:', e2);
     }
-  });
+  }
 
-  // ================================================================
-  // X（Twitter）投稿
-  // ================================================================
-  btnX.addEventListener('click', () => {
-    const text =
-      '今日、うまさんと小さな冒険をしてきました🐴\n' +
-      '#旅するうまさん #うまさんのいる日常';
-    window.open(
-      'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text),
-      '_blank'
+  if (capturedUrl) {
+    previewFull.src = capturedUrl;
+    previewFull.classList.add('visible');
+  }
+
+  // キャプチャ成否にかかわらず必ずUIを次フェーズへ遷移させる
+  umasanEl.classList.add('hidden');
+  resetBtn.classList.add('hidden');
+  btnCapture.style.display = 'none';
+  btnRetake.classList.add('visible');
+  btnSave.disabled = !capturedUrl;
+  btnX.disabled    = !capturedUrl;
+  poseToggleBtn.classList.add('hidden');
+  closePanel();
+}
+
+/* ================================================================
+   Save
+================================================================ */
+btnSave.addEventListener('click', () => {
+  if (!capturedUrl) return;
+  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    const win = window.open('', '_blank');
+    win.document.write(
+      '<html><head><meta name="viewport" content="width=device-width">' +
+      '<title>うまさん写真</title></head>' +
+      '<body style="margin:0;background:#000;display:flex;flex-direction:column;' +
+      'align-items:center;justify-content:center;min-height:100vh;">' +
+      '<img src="' + capturedUrl + '" style="max-width:100%;">' +
+      '<p style="color:#fff;font-size:14px;margin-top:16px;text-align:center;' +
+      'padding:0 20px;line-height:1.8;">画像を長押しして<br>「写真に追加」で保存してね🐴</p>' +
+      '</body></html>'
     );
-  });
+    win.document.close();
+  } else {
+    const a = document.createElement('a');
+    a.download = 'umasan_' + Date.now() + '.png';
+    a.href = capturedUrl;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+});
 
-  // ================================================================
-  // もう一度撮る
-  // ================================================================
-  btnRetake.addEventListener('click', () => {
-    capturedUrl  = null;
-    previewSection.classList.remove('visible');
-    statusMsg.textContent = 'うまさんを好きな場所に置いてね🐴';
-    btnSave.disabled = true;
-    btnX.disabled    = true;
-  });
+/* ================================================================
+   X Share
+================================================================ */
+btnX.addEventListener('click', () => {
+  const text = '今日の景色に、うまさんを連れていきました🐴✨\n#旅するうまさん #うまさんのいる日常';
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
+});
 
-  // ================================================================
-  // 起動処理
-  // ================================================================
-  (async () => {
-    await startCamera(facingMode);
-    centerUmasan();
-  })();
+/* ================================================================
+   Retake
+================================================================ */
+btnRetake.addEventListener('click', () => {
+  capturedUrl = null;
+  previewFull.src = '';
+  previewFull.classList.remove('visible');
+  umasanEl.classList.remove('hidden');
+  resetBtn.classList.remove('hidden');
+  btnCapture.style.display = '';
+  btnRetake.classList.remove('visible');
+  btnSave.disabled = true;
+  btnX.disabled    = true;
+  poseToggleBtn.classList.remove('hidden');
+});
+
+/* ================================================================
+   Measure bottom-controls height → pass to pose-panel padding
+================================================================ */
+function syncPanelOffset() {
+  const h = document.getElementById('bottom-controls').offsetHeight;
+  document.documentElement.style.setProperty('--btm-h', h + 'px');
+}
+
+/* ================================================================
+   Sparkles
+================================================================ */
+(function initSparkles() {
+  const layer = document.getElementById('sparkle-layer');
+  for (let i = 0; i < 8; i++) {
+    const el = document.createElement('div');
+    el.className = 'sp';
+    el.style.cssText =
+      'left:'               + (Math.random() * 92) + '%;' +
+      'bottom:'             + (12 + Math.random() * 45) + '%;' +
+      'animation-duration:' + (7  + Math.random() * 8) + 's;' +
+      'animation-delay:'    + (Math.random() * 10) + 's;' +
+      'width:'              + (2  + Math.random() * 2) + 'px;' +
+      'height:'             + (2  + Math.random() * 2) + 'px;';
+    layer.appendChild(el);
+  }
+})();
+
+/* ================================================================
+   Init
+================================================================ */
+// ポーズ画像をCORSクロスオリジン対応で事前読み込み（canvas.toDataURL用）
+document.querySelectorAll('.pose-thumb img, #umasan img').forEach(img => {
+  img.crossOrigin = 'anonymous';
+});
+
+(async () => {
+  await startCamera(facingMode);
+  centerUmasan();
+  syncPanelOffset();
+  window.addEventListener('resize', syncPanelOffset);
+})();
 </script>
 </body>
 </html>
