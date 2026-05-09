@@ -733,7 +733,8 @@ btnSave.addEventListener('click', async () => {
 ================================================================ */
 btnX.addEventListener('click', () => {
   const text = '今日の景色に、うまさんを連れていきました🐴✨\n#旅するうまさん #うまさんのいる日常';
-  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
+  const url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text);
+  window.location.href = url;
 });
 
 /* ================================================================
