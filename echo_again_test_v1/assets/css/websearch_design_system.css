@@ -1,0 +1,145 @@
+/*
+ * 作中ウェブ検索の共通デザイン層。
+ * websearch_style.css の既存表現を基準に、共通値とレスポンシブ規則を集約する。
+ */
+:root {
+  --search-font: Arial, "Noto Sans JP", "Yu Gothic UI", Meiryo, sans-serif;
+  --search-page-bg: #fff;
+  --search-text: #202124;
+  --search-copy: #4d5156;
+  --search-muted: #70757a;
+  --search-ui: #5f6368;
+  --search-link: #1a0dab;
+  --search-link-visited: #681da8;
+  --search-action: #1a73e8;
+  --search-line: #dadce0;
+  --search-line-soft: #ebedef;
+  --search-chip: #f1f3f4;
+  --search-panel-bg: #fff;
+  --search-panel-radius: 9px;
+  --search-panel-shadow: 0 1px 2px rgba(60, 64, 67, .08);
+  --search-content-width: 1110px;
+  --search-results-width: 652px;
+  --search-side-width: 360px;
+  --search-desktop-offset: 164px;
+  --search-layout-gap: 48px;
+  --search-mobile-gutter: 18px;
+}
+
+body {
+  background: var(--search-page-bg);
+  color: var(--search-text);
+  font-family: var(--search-font);
+}
+
+.search-header,
+.search-tabs,
+.search-layout,
+.search-zero,
+.site-footer { flex: 0 0 auto; }
+
+.search-box {
+  border-color: var(--search-line);
+  background: var(--search-panel-bg);
+}
+
+.search-box input { color: var(--search-text); font-family: var(--search-font); }
+.search-box button,
+.tabs-inner .active,
+.review-head span { color: var(--search-action); }
+.search-tabs { border-color: var(--search-line-soft); }
+.tabs-inner { color: var(--search-ui); }
+
+.account {
+  width: auto;
+  min-width: 72px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--search-action);
+  border-radius: 4px;
+  background: var(--search-action);
+  color: #fff;
+  font: 500 14px/1 var(--search-font);
+}
+
+.search-layout {
+  width: min(var(--search-content-width), calc(100vw - 204px));
+  grid-template-columns: minmax(0, var(--search-results-width)) minmax(280px, var(--search-side-width));
+  gap: var(--search-layout-gap);
+  margin-left: var(--search-desktop-offset);
+}
+
+.search-layout .results { min-width: 0; }
+.result-count,
+.search-zero span,
+.place-kind,
+.place-rating small,
+.knowledge-heading p,
+.knowledge-source { color: var(--search-muted); }
+.search-result p,
+.site-line small,
+.place-facts dd,
+.knowledge-facts dd { color: var(--search-copy); }
+.search-result h1 a,
+.search-result h1 a.dummy-link,
+.sitelinks span,
+.pagination { color: var(--search-link); }
+.search-result h1 a:visited { color: var(--search-link-visited); }
+
+.place-panel,
+.knowledge-panel {
+  overflow: hidden;
+  border: 1px solid var(--search-line);
+  border-radius: var(--search-panel-radius);
+  background: var(--search-panel-bg);
+  box-shadow: var(--search-panel-shadow);
+}
+
+.place-facts,
+.review-card,
+.knowledge-facts,
+.related { border-color: var(--search-line-soft); }
+.related-grid span { background: var(--search-chip); }
+
+.search-zero {
+  width: min(var(--search-results-width), calc(100vw - 40px));
+  margin-left: var(--search-desktop-offset);
+}
+
+@media (max-width: 1180px) {
+  :root { --search-layout-gap: 34px; }
+  .search-layout { width: calc(100vw - 112px); margin-left: 72px; }
+  .search-zero { margin-left: 72px; }
+}
+
+@media (max-width: 980px) {
+  .search-layout {
+    width: min(690px, calc(100vw - 40px));
+    grid-template-columns: minmax(0, 1fr);
+    margin-inline: auto;
+  }
+  .search-layout > aside { width: 100%; }
+}
+
+@media (max-width: 760px) {
+  .search-layout {
+    width: auto;
+    margin-inline: var(--search-mobile-gutter);
+  }
+  .search-zero {
+    width: auto;
+    margin-inline: var(--search-mobile-gutter);
+  }
+  .search-result { margin-bottom: 36px; }
+  .search-result h1 { font-size: 19px; overflow-wrap: anywhere; }
+  .search-result p { line-height: 1.65; }
+  .place-body h2 { white-space: normal; }
+  .pagination { min-height: 44px; }
+}
+
+@media (max-width: 420px) {
+  .search-header { grid-template-columns: 1fr auto; }
+  .apps { display: none; }
+  .account { min-width: 68px; }
+  .sitelinks { grid-template-columns: 1fr; }
+}

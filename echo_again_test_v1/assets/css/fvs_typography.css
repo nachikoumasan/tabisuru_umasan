@@ -1,0 +1,289 @@
+:root {
+  --fvs-size-page-title: var(--fvs-type-page-title, 30px);
+  --fvs-size-body: var(--fvs-type-body, 15px);
+  --fvs-size-small: var(--fvs-type-small, 12px);
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--fvs-font-sans) !important;
+  font-feature-settings: "palt" 1;
+  font-kerning: normal;
+  font-synthesis: none;
+}
+
+body {
+  font-weight: 400;
+  letter-spacing: 0.018em;
+}
+
+button,
+input,
+select,
+textarea,
+.global-nav,
+.page-directory,
+.publication-table,
+.document-list,
+.archive-search form,
+.control-main {
+  font-family: var(--fvs-font-sans-ui) !important;
+}
+
+.brand-ja,
+.site-header .brand-ja,
+.site-footer h2,
+main h1,
+main h2,
+main h3,
+.hero h1,
+.page-head h1,
+.block-head h2,
+.subhead,
+.callout strong,
+.stack h2,
+.stack h3,
+.public-field-card h3,
+.public-project-card h3,
+.notice-detail h2,
+.document-body h2,
+.view-hero h1,
+.document-header h1,
+.related-documents h2,
+.publication-search h2,
+.notice-detail h2 {
+  font-family: var(--fvs-font-serif) !important;
+  font-weight: 600;
+}
+
+.brand-ja,
+.hero h1,
+.view-hero h1,
+.document-header h1 {
+  font-feature-settings: "palt" 1;
+  font-kerning: normal;
+}
+.site-header .header-inner {
+  height: 82px;
+}
+.site-header .brand-ja {
+  font-size: 18px;
+  line-height: 1.35;
+}
+.site-header .brand-en {
+  font-size: 8px;
+  line-height: 1.5;
+}
+.site-header .global-nav {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.035em;
+}
+
+/* Small copy should retain the sober density of an institutional website. */
+.eyebrow,
+.breadcrumbs,
+.page-directory,
+.section-link,
+.text-link,
+.status,
+.tag,
+.meta,
+.public-meta,
+.document-meta-line,
+.publication-table th,
+.publication-table td,
+.notice-list time,
+.site-footer,
+.fiction-note,
+small,
+caption,
+dt {
+  font-family: var(--fvs-font-sans-ui) !important;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}
+
+.publication-table th,
+.document-list > header,
+.facts dt,
+.control-facts dt,
+.page-directory a,
+.page-directory button {
+  font-weight: 600;
+}
+
+p,
+li,
+dd,
+td,
+.card p,
+.public-field-card p,
+.public-project-card p,
+.notice-list a {
+  text-rendering: optimizeLegibility;
+}
+
+/* 公開サイト・資料庫・制御画面を同じ文字設計に揃える */
+.archive-header b,
+.control-header b,
+.archive-header strong,
+.control-header strong,
+.archive-search h1,
+.control-main h1,
+.doc-header h1,
+.doc-body h2,
+.archive-layout aside h2,
+.control-main h2,
+.control-main h3 {
+  font-family: var(--fvs-font-serif) !important;
+  font-weight: 600;
+  font-feature-settings: "palt" 1;
+}
+.archive-app,
+.safety-app {
+  font-size: var(--fvs-size-body) !important;
+  line-height: 1.8;
+}
+.archive-header b,
+.control-header b {
+  font-size: 16px !important;
+  letter-spacing: 0.04em;
+}
+.archive-header strong,
+.control-header strong {
+  font-size: 15px !important;
+  letter-spacing: 0.03em;
+}
+.archive-header small,
+.control-header span,
+.eyebrow {
+  font-family: var(--fvs-font-sans-ui) !important;
+  font-size: var(--fvs-size-small) !important;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+.archive-search h1,
+.control-main > h1,
+.doc-header h1 {
+  font-size: var(--fvs-size-page-title) !important;
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+}
+.archive-search p,
+.archive-layout aside p,
+.document-list,
+.document-view,
+.control-main,
+.control-main button,
+.control-main input {
+  font-size: var(--fvs-size-body) !important;
+}
+.archive-layout aside h2,
+.doc-body h2,
+.control-main h2 {
+  font-size: var(--fvs-type-section-title, 22px) !important;
+  line-height: 1.5;
+}
+.control-main h3 {
+  font-size: var(--fvs-type-card-title, 17px) !important;
+}
+.document-list > header,
+.document-list small,
+.document-list em,
+.archive-layout aside button,
+.doc-header dt,
+.facts dt,
+.control-facts dt,
+.archive-header small,
+.control-header span {
+  font-size: var(--fvs-size-small) !important;
+}
+.document-list > button,
+.doc-body,
+.doc-body table,
+.facts dd,
+.control-facts dd {
+  font-size: 14px !important;
+}
+.doc-header > p,
+.document-number,
+pre,
+code,
+kbd,
+samp {
+  font-family: var(--fvs-font-mono) !important;
+  font-feature-settings: normal;
+}
+.chart text {
+  font-family: var(--fvs-font-sans-ui) !important;
+  font-size: 11px !important;
+  font-weight: 500;
+}
+
+.view-hero h1 {
+  font-size: var(--fvs-size-page-title) !important;
+  line-height: 1.35;
+}
+.view-hero p:last-child {
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.document-header h1 {
+  font-size: clamp(27px, 3vw, 34px) !important;
+  line-height: 1.5;
+  letter-spacing: 0.045em;
+}
+.document-number {
+  font-size: 13px;
+}
+.document-meta-line {
+  font-size: var(--fvs-size-small);
+}
+.document-body {
+  font-size: var(--fvs-size-body) !important;
+  line-height: 1.9;
+}
+
+.related-documents h2 {
+  font-size: 20px !important;
+  line-height: 1.5;
+}
+.notice-detail h2 {
+  font-size: 24px !important;
+  line-height: 1.55;
+}
+.publication-search h2 {
+  font-size: 20px !important;
+}
+
+@media (max-width: 720px) {
+  :root {
+    --fvs-size-page-title: 26px;
+    --fvs-size-body: 14px;
+  }
+  .site-header .header-inner {
+    height: 72px;
+  }
+  .site-header .brand-ja {
+    font-size: 14px;
+  }
+  .site-header .brand-en {
+    font-size: 6px;
+  }
+  .site-header .brand-logo {
+    width: 32px;
+    height: 32px;
+  }
+  .document-header h1 {
+    font-size: 25px !important;
+    letter-spacing: 0.035em;
+  }
+  .notice-detail h2 {
+    font-size: 21px !important;
+  }
+}

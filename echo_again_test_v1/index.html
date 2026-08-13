@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+  <base href="./">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f3f2ef">
+  <link rel="icon" href="media/blog_favicon_32.png?v=20260813" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="media/blog_apple_touch_180.png?v=20260813" sizes="180x180">
+  <title>日々の置き場所</title>
+  <meta name="description" content="写真と、忘れたくないこと。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="日々の置き場所">
+  <meta property="og:description" content="写真と、忘れたくないこと。">
+  <link rel="stylesheet" href="assets/css/blog_style.css?v=20260813">
+  <link rel="stylesheet" href="assets/css/common.css?v=20260813">
+  <link rel="stylesheet" href="assets/css/blog_design_system.css?v=20260813">
+  <script src="assets/js/shared/util.js?v=20260813" defer></script>
+  <script src="assets/js/blog_articles.js?v=20260813" defer></script>
+  <script src="assets/js/blog_main.js?v=20260813" defer></script>
+<link rel="stylesheet" href="assets/css/page-counter.css">
+<link rel="stylesheet" href="assets/css/page-list-modal.css">
+<meta name="generator" content="simple-item-master-three">
+</head>
+<body data-page-slug="index">
+  <div id="app"></div>
+  <div id="page-counter" data-yacho-visit-mode="modal" data-yacho-visit-mode="modal" class="page-counter"><span id="page-current"></span><span class="sep"> / </span><span id="page-total"></span></div>
+  <script>window.YACHO_BASE = new URL("./", document.baseURI).pathname; window.YACHO_PROVIDER_MODE = "json";</script>
+  <script type="module" src="assets/js/core/index.js?v=20260813"></script>
+  <script type="module" src="assets/js/core/ui/pageListInit.js?v=20260813"></script>
+
+<script type="module">
+import { initVisitTracker } from './assets/js/core/visitTracker.js';
+import { initPageListModal } from './assets/js/core/ui/pageListModal.js';
+initVisitTracker();
+const _c = document.getElementById('page-counter');
+
+if (_c) initPageListModal({
+  mode: 'modal',
+  showUnvisitedTitle: false,
+  pageHref: ''
+});
+</script>
+
+<footer style="text-align:center;padding:12px 0 8px;"><p style="margin-top:8px;font-size:11px;opacity:.55;">Powered by <a href="https://sim3.net/yacho/" target="_blank" rel="noopener">YACHO(SIM3)</a></p></footer>
+</body>
+</html>

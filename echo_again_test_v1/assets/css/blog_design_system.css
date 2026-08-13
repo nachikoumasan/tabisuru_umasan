@@ -1,0 +1,119 @@
+/**
+ * 奈緒ブログ共通デザインシステム
+ * index.html の完成デザインを、一覧・記事・絞り込み・モーダルへ共通適用する。
+ * 既存 blog_style.css の後に読み込み、主要部品の最終仕様をここで一元管理する。
+ */
+:root {
+  --blog-page-bg: #f3f2ef;
+  --blog-surface: #fff;
+  --blog-surface-soft: #fbfbf9;
+  --blog-text: #3f4347;
+  --blog-muted: #777d82;
+  --blog-line: #d9dcde;
+  --blog-link: #526d7c;
+  --blog-focus: #8ca0aa;
+  --blog-radius: 0;
+  --blog-space-2: 10px;
+  --blog-space-3: 14px;
+  --blog-content-max: 1060px;
+  --blog-sidebar-width: 270px;
+}
+
+body {
+  background: var(--blog-page-bg);
+  color: var(--blog-text);
+}
+a { color: var(--blog-link); }
+:focus-visible { outline-color: var(--blog-focus); }
+.wrap { width: min(calc(100% - 36px), var(--blog-content-max)); }
+.layout {
+  grid-template-columns: minmax(0, 740px) var(--blog-sidebar-width);
+  gap: 28px;
+}
+
+/* 共通サーフェス */
+.content,
+.entry,
+.sidebar section {
+  border-color: var(--blog-line);
+  border-radius: var(--blog-radius);
+  background: var(--blog-surface);
+}
+.sidebar section { background: var(--blog-surface-soft); }
+.section-title,
+.post,
+.sidebar h2,
+.entry > header,
+.page-nav,
+.entry-nav { border-color: var(--blog-line); }
+
+/* 共通メタ情報・リンク */
+.meta,
+.section-title > span,
+.entry-nav small,
+.sidebar time { color: var(--blog-muted); }
+.read-more,
+.side-stat,
+.page-nav a,
+.entry-nav a { color: var(--blog-link); }
+
+/* 一覧と記事で共通するナビゲーション */
+.page-nav,
+.entry-nav {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--blog-space-3);
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid var(--blog-line);
+}
+.page-nav > .page-prev,
+.entry-nav > .prev-post { grid-column: 1; justify-self: start; }
+.page-nav > div { grid-column: 2; }
+.page-nav > .page-next,
+.entry-nav > .next-post { grid-column: 3; justify-self: end; }
+.page-nav > span,
+.entry-nav > span { display: none; }
+.page-nav > a,
+.entry-nav > a {
+  min-width: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--blog-space-2);
+  text-decoration: none;
+}
+.entry-nav > .next-post { justify-content: flex-end; text-align: right; }
+.entry-nav .nav-arrow { flex: 0 0 auto; display: grid; place-items: center; }
+.entry-nav a > span:not(.nav-arrow) { min-width: 0; }
+.entry-nav small,
+.entry-nav b { display: block; }
+.entry-nav b { overflow-wrap: anywhere; }
+
+/* 写真モーダル */
+#photo-modal .modal-box { position: relative; }
+#photo-modal .modal-content { overflow: hidden; }
+#photo-modal .close {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+}
+
+@media (max-width: 820px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .wrap { width: min(calc(100% - 20px), var(--blog-content-max)); }
+  .content,
+  .entry { padding-inline: 16px; }
+  .sidebar { grid-template-columns: 1fr; }
+  .page-nav,
+  .entry-nav { gap: 10px; }
+  .page-nav > a,
+  .entry-nav > a { gap: 7px; }
+  .entry-nav b { font-size: .72rem; line-height: 1.5; }
+}

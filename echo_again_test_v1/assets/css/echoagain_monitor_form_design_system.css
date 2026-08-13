@@ -1,0 +1,113 @@
+/*
+ * Echo Again応募フォームの共通デザイン層。
+ * 現行フォームを基準に、色、幅、カード、入力状態、操作状態を集約する。
+ */
+:root {
+  --monitor-accent: #673ab7;
+  --monitor-page-bg: #f0ebf8;
+  --monitor-surface: #fff;
+  --monitor-surface-soft: #faf8fc;
+  --monitor-input-bg: #f8f9fa;
+  --monitor-text: #202124;
+  --monitor-muted: #5f6368;
+  --monitor-placeholder: #9aa0a6;
+  --monitor-danger: #d93025;
+  --monitor-line: #dadce0;
+  --monitor-line-soft: #ece8f1;
+  --monitor-consent-line: #ded8e8;
+  --monitor-disabled: #a89abb;
+  --monitor-content-width: 760px;
+  --monitor-page-gutter: 16px;
+  --monitor-card-gap: 12px;
+  --monitor-card-radius: 8px;
+  --monitor-control-radius: 4px;
+  --monitor-card-shadow: 0 1px 2px rgba(60, 64, 67, .08);
+  --monitor-focus-ring: 0 0 0 3px rgba(103, 58, 183, .18);
+
+  /* 既存CSSとの互換エイリアス。 */
+  --form-accent: var(--monitor-accent);
+  --form-bg: var(--monitor-page-bg);
+  --form-border: var(--monitor-line);
+  --form-text: var(--monitor-text);
+  --form-muted: var(--monitor-muted);
+  --form-danger: var(--monitor-danger);
+}
+
+html,
+body { background: var(--monitor-page-bg); color: var(--monitor-text); }
+
+.form-main { padding-inline: var(--monitor-page-gutter); }
+.form-wrap { width: min(100%, var(--monitor-content-width)); }
+
+.form-title-card,
+.question-card {
+  margin-bottom: var(--monitor-card-gap);
+  border-color: var(--monitor-line);
+  border-radius: var(--monitor-card-radius);
+  background: var(--monitor-surface);
+  box-shadow: var(--monitor-card-shadow);
+}
+
+.question-card input[type="text"],
+.question-card input[type="tel"],
+.question-card input[type="email"] {
+  border-bottom-color: var(--monitor-placeholder);
+  color: var(--monitor-text);
+}
+
+.question-card select {
+  border-color: var(--monitor-placeholder);
+  border-radius: var(--monitor-control-radius);
+  background: var(--monitor-input-bg);
+  color: var(--monitor-text);
+}
+
+.question-card input::placeholder { color: var(--monitor-placeholder); }
+
+.question-card input:focus-visible,
+.question-card select:focus-visible,
+.consent-check input:focus-visible,
+.form-submit:focus-visible,
+.institution-link:focus-visible {
+  outline: 2px solid var(--monitor-accent);
+  outline-offset: 3px;
+}
+
+.question-card input[type="text"]:focus,
+.question-card input[type="tel"]:focus,
+.question-card input[type="email"]:focus {
+  border-bottom-color: var(--monitor-accent);
+  box-shadow: 0 1px 0 var(--monitor-accent);
+}
+
+.information-intro { border-color: var(--monitor-line-soft); }
+.form-choice .consent-area > label.consent-check {
+  border-color: var(--monitor-consent-line);
+  background: var(--monitor-surface-soft);
+}
+
+.form-submit:disabled {
+  background: var(--monitor-disabled);
+  cursor: not-allowed;
+  opacity: .82;
+}
+
+.institution-link { border-radius: 2px; }
+.skip-link { border-radius: var(--monitor-control-radius); box-shadow: var(--monitor-focus-ring); }
+
+@media (max-width: 600px) {
+  :root {
+    --monitor-page-gutter: 10px;
+    --monitor-card-radius: 7px;
+  }
+  .question-card input[type="text"],
+  .question-card input[type="tel"],
+  .question-card input[type="email"],
+  .question-card select { width: 100%; }
+  .institution-link { align-items: flex-start; line-height: 1.6; }
+  .form-submit { min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
+}

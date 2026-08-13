@@ -1,0 +1,1200 @@
+@charset "utf-8";
+/* FVS public site shared design system. Loaded after page-specific styles. */
+
+:root {
+  --fvs-layout-wide: 1180px;
+  --fvs-layout-main: 1080px;
+  --fvs-space-section: 44px;
+  --fvs-space-section-mobile: 28px;
+  --fvs-space-grid: 16px;
+  --fvs-radius: 4px;
+  --fvs-shadow-soft: 0 8px 24px rgba(18, 58, 102, .055);
+  --fvs-navy: #0d315c;
+  --fvs-blue: #1760b4;
+  --fvs-blue-soft: #edf5fc;
+  --fvs-line: #cfdeec;
+  --fvs-copy: #344b62;
+  --fvs-muted: #687b8f;
+  --fvs-control-surface: #f4f7f9;
+  --fvs-control-panel: #fff;
+  --fvs-control-line: #cbd7e2;
+  --fvs-public-header-height: 64px;
+  --fvs-public-header-height-mobile: 58px;
+  --fvs-subpage-hero-height: 172px;
+  --fvs-subpage-hero-height-mobile: 142px;
+  --fvs-card-padding: 20px;
+  --fvs-card-padding-mobile: 16px;
+  --fvs-card-title-size: 16px;
+  --fvs-card-body-size: 13px;
+  --fvs-card-meta-size: 11.5px;
+  --fvs-card-media-ratio: 16 / 9;
+}
+
+html {
+  scroll-padding-top: 74px;
+}
+body {
+  color: var(--fvs-copy);
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.shell {
+  width: min(calc(100% - 48px), var(--fvs-layout-main));
+}
+
+/* Header */
+.site-header {
+  min-height: var(--fvs-public-header-height);
+  border-bottom: 1px solid rgba(25, 70, 119, .14);
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 3px 12px rgba(19, 55, 93, .035);
+  backdrop-filter: blur(10px);
+}
+.site-header .header-inner {
+  width: min(calc(100% - 56px), var(--fvs-layout-wide));
+  height: var(--fvs-public-header-height) !important;
+}
+.brand {
+  gap: 9px;
+}
+.brand-logo {
+  width: 32px;
+  height: 32px;
+}
+.brand-ja {
+  color: var(--fvs-navy);
+  font-size: 16px !important;
+  line-height: 1.25 !important;
+  letter-spacing: .06em;
+}
+.brand-en {
+  margin-top: 0;
+  color: #476787;
+  font-size: 7px !important;
+  line-height: 1.35 !important;
+  letter-spacing: .15em;
+}
+.global-nav {
+  gap: clamp(13px, 1.8vw, 26px);
+}
+.global-nav > a,
+.nav-item > a {
+  position: relative;
+  min-height: var(--fvs-public-header-height);
+  padding: 0 2px;
+  display: inline-flex;
+  align-items: center;
+  color: #173d66;
+  font-weight: 600;
+  font-size: 12.5px;
+}
+
+/* All routed subpages use one compact page-header geometry. */
+main > .view-hero,
+main > :is(div, section):not(.hero) > .page-head,
+main > .utility-view > .page-head {
+  min-height: var(--fvs-subpage-hero-height) !important;
+  padding: 0 !important;
+}
+main > .view-hero > .shell,
+main > :is(div, section):not(.hero) > .page-head > .shell,
+main > .utility-view > .page-head > .shell {
+  padding-block: 20px 22px !important;
+}
+main > .view-hero .breadcrumbs,
+main > :is(div, section):not(.hero) > .page-head .breadcrumbs {
+  margin: 0 0 8px !important;
+  font-size: 10px !important;
+  line-height: 1.5;
+}
+main > .view-hero .eyebrow,
+main > :is(div, section):not(.hero) > .page-head .eyebrow {
+  margin: 0 0 4px !important;
+  font-size: 9px !important;
+  line-height: 1.45;
+}
+main > .view-hero h1,
+main > :is(div, section):not(.hero) > .page-head h1 {
+  margin: 2px 0 8px !important;
+  font-size: clamp(27px, 2.6vw, 34px) !important;
+  line-height: 1.3 !important;
+  letter-spacing: .06em !important;
+}
+main > .view-hero p:last-child,
+main > :is(div, section):not(.hero) > .page-head .page-lead {
+  max-width: 620px;
+  margin: 0 !important;
+  font-size: 12.5px !important;
+  line-height: 1.7 !important;
+}
+
+.page-directory {
+  min-height: 50px;
+  margin: 0 auto 26px;
+}
+.page-directory a,
+.page-directory button {
+  min-height: 50px;
+  padding: 8px 16px;
+  font-size: 12px;
+}
+.nav-submenu {
+  top: calc(100% - 1px);
+}
+.nav-submenu a {
+  min-height: 38px;
+  padding: 9px 15px;
+  font-size: 12px;
+}
+.global-nav > a::after,
+.nav-item > a::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--fvs-blue);
+  content: "";
+  opacity: 0;
+  transform: scaleX(.45);
+  transition: .18s ease;
+}
+.global-nav > a:hover::after,
+.nav-item:hover > a::after,
+.global-nav [aria-current="page"]::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+.nav-submenu {
+  border-top: 2px solid var(--fvs-blue);
+  border-radius: 0 0 var(--fvs-radius) var(--fvs-radius);
+  box-shadow: var(--fvs-shadow-soft);
+}
+
+/* Shared subpage hero */
+main > :is(div, section):not(.hero) > .page-head,
+main > .utility-view > .page-head {
+  min-height: 242px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(29, 87, 145, .12);
+}
+.page-head .shell {
+  padding-block: 26px 32px;
+}
+.breadcrumb {
+  margin-bottom: 19px;
+  color: #58718a;
+  font-size: 11px;
+}
+.page-head .eyebrow,
+.section-label {
+  color: var(--fvs-blue);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .18em;
+}
+.page-head h1 {
+  margin: 5px 0 15px;
+  color: var(--fvs-navy);
+  font-size: clamp(30px, 3.5vw, 42px);
+  line-height: 1.35;
+  letter-spacing: .08em;
+}
+.page-lead {
+  max-width: 650px;
+  margin: 0;
+  color: #36526d;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* In-page directory */
+.page-directory {
+  position: relative;
+  z-index: 3;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: rgba(255,255,255,.98);
+}
+.page-directory a {
+  min-height: 66px;
+  border-right: 1px solid var(--fvs-line);
+  color: #284c73;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background .18s ease, color .18s ease;
+}
+.page-directory a:hover {
+  color: var(--fvs-blue);
+  background: #f3f8fd;
+}
+.page-directory span {
+  color: var(--fvs-blue);
+  font-size: 10px;
+  letter-spacing: .1em;
+}
+
+/* Section rhythm and headings */
+.block {
+  padding-block: var(--fvs-space-section);
+}
+.block + .block {
+  border-top: 1px solid rgba(35, 81, 127, .08);
+}
+.block.tinted {
+  background: linear-gradient(180deg, #f6f9fc, #f9fbfd);
+}
+.block-head {
+  margin-bottom: 22px;
+}
+.block-head h2,
+.subhead {
+  color: var(--fvs-navy);
+  font-size: clamp(22px, 2.2vw, 27px);
+  line-height: 1.45;
+  letter-spacing: .055em;
+}
+.block-head h2 {
+  margin: 3px 0 0;
+}
+.block-lead {
+  max-width: 720px;
+  margin-top: 7px;
+  color: var(--fvs-muted);
+  font-size: 13px;
+}
+.subhead {
+  margin: 32px 0 14px;
+}
+
+/* Shared card language */
+:is(.stack--grid, .stack--grid3, .public-field-grid, .public-project-grid,
+    .researcher-directory, .study-card-grid, .organization-card-grid,
+    .research-area-grid, .research-project-grid, .research-environment-grid,
+    .ethics-card-grid, .ethics-desk-grid, .recruit-position-grid) {
+  gap: var(--fvs-space-grid);
+}
+:is(.stack--grid, .stack--grid3) > article,
+.public-field-card,
+.public-project-card,
+.researcher-directory article,
+.study-card,
+.organization-card-grid > article,
+.research-area-grid > article,
+.research-project-grid > article,
+.research-environment-grid > article,
+.ethics-card-grid > article,
+.ethics-desk-grid article,
+.recruit-position-grid article,
+.contact-card {
+  border-color: var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  box-shadow: var(--fvs-shadow-soft);
+}
+:is(.public-field-card, .public-project-card, .study-card,
+    .research-project-grid > article, .research-environment-grid > article,
+    .contact-card) img {
+  display: block;
+}
+:is(.stack-body, .project-card-body) > h3,
+.contact-card h3 {
+  color: var(--fvs-navy);
+  line-height: 1.55;
+}
+.tag-list li,
+.status,
+.idx {
+  border-radius: 2px;
+}
+
+/* Unified cards ---------------------------------------------------------
+   Four families share one visual grammar:
+   information, media/project, people/organization and navigation cards. */
+:is(.public-field-grid, .public-project-grid, .study-card-grid,
+    .organization-card-grid, .research-area-grid, .research-project-grid,
+    .research-environment-grid, .researcher-directory, .ethics-card-grid,
+    .ethics-desk-grid, .recruit-position-grid, .contact-card-grid,
+    .stack--grid, .stack--grid3, .stack--steps, .ethics-process) {
+  align-items: stretch;
+  gap: 16px !important;
+}
+
+:is(.public-field-card, .public-project-card, .study-card,
+    .organization-card-grid > article, .research-area-grid > article,
+    .research-project-grid > article, .research-environment-grid > article,
+    .researcher-directory > article, .ethics-card-grid > article,
+    .ethics-desk-grid > article, .recruit-position-grid > article,
+    .contact-card, .stack--grid > article, .stack--grid3 > article,
+    .stack--steps > article, .ethics-process > article) {
+  min-width: 0;
+  height: 100%;
+  border: 1px solid var(--fvs-line) !important;
+  border-radius: var(--fvs-radius) !important;
+  background: #fff;
+  box-shadow: var(--fvs-shadow-soft) !important;
+}
+
+/* Text-only information cards */
+:is(.public-field-card, .organization-card-grid > article,
+    .research-area-grid > article, .researcher-directory > article,
+    .ethics-card-grid > article, .ethics-desk-grid > article,
+    .recruit-position-grid > article, .stack--grid > article,
+    .stack--grid3 > article, .stack--steps > article,
+    .ethics-process > article) {
+  padding: var(--fvs-card-padding) !important;
+}
+
+:is(.public-field-card, .public-project-card, .study-card,
+    .organization-card-grid > article, .research-area-grid > article,
+    .research-project-grid > article, .research-environment-grid > article,
+    .researcher-directory > article, .ethics-card-grid > article,
+    .ethics-desk-grid > article, .recruit-position-grid > article,
+    .stack--grid > article, .stack--grid3 > article,
+    .stack--steps > article, .ethics-process > article,
+    .contact-card) h3 {
+  margin: 0 0 7px !important;
+  color: var(--fvs-navy);
+  font-size: var(--fvs-card-title-size) !important;
+  line-height: 1.5 !important;
+  letter-spacing: .035em;
+}
+
+:is(.public-field-card, .public-project-card, .study-card,
+    .organization-card-grid > article, .research-area-grid > article,
+    .research-project-grid > article, .research-environment-grid > article,
+    .researcher-directory > article, .ethics-card-grid > article,
+    .ethics-desk-grid > article, .recruit-position-grid > article,
+    .stack--grid > article, .stack--grid3 > article,
+    .stack--steps > article, .ethics-process > article,
+    .contact-card) p {
+  margin-top: 0;
+  color: var(--fvs-copy);
+  font-size: var(--fvs-card-body-size) !important;
+  line-height: 1.75 !important;
+}
+
+/* Media/project cards */
+:is(.public-project-card, .study-card, .research-project-grid > article,
+    .research-environment-grid > article) {
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  overflow: hidden;
+}
+:is(.public-project-card .project-image, .study-card-media,
+    .research-project-grid > article > img,
+    .research-environment-grid > article > img) {
+  width: 100%;
+  aspect-ratio: var(--fvs-card-media-ratio) !important;
+  height: auto !important;
+  min-height: 0 !important;
+  object-fit: cover;
+}
+:is(.project-card-body, .study-card .stack-body,
+    .research-project-grid > article > :not(img),
+    .research-environment-grid > article > :not(img)) {
+  padding: var(--fvs-card-padding) !important;
+}
+.project-card-body,
+.study-card .stack-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Metadata and card actions sit consistently at the lower edge. */
+:is(.public-project-card dl, .study-card .def,
+    .research-project-grid .def, .research-environment-grid .def,
+    .organization-card-grid .desk) {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--fvs-line);
+  font-size: var(--fvs-card-meta-size) !important;
+}
+:is(.project-more, .section-link, .text-link, .card-link) {
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Navigation/contact cards use the same height and internal rhythm. */
+.contact-card {
+  min-height: 112px;
+  grid-template-columns: 44px minmax(0, 1fr) 16px;
+  gap: 16px;
+  padding: 18px var(--fvs-card-padding) !important;
+}
+.contact-card-icon {
+  width: 44px;
+  height: 44px;
+}
+.contact-card h3 {
+  margin-bottom: 3px !important;
+  color: var(--fvs-muted);
+  font-size: 11.5px !important;
+}
+.contact-card strong {
+  margin-bottom: 4px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* One-off feature panels follow the same border and radius without being
+   forced into a small-card height. */
+:is(.philosophy-panel, .director-panel, .ended-study-card,
+    .publication-archive-banner, .contact-guidance, .participant-rights) {
+  border-color: var(--fvs-line) !important;
+  border-radius: var(--fvs-radius) !important;
+  box-shadow: var(--fvs-shadow-soft) !important;
+}
+
+/* Functional layout families --------------------------------------------
+   Research institute sites use different surfaces for different jobs:
+   cards introduce a subject, rows support scanning, and steps show order. */
+
+/* Statistics are a single institutional data strip, not four floating cards. */
+.home-overview-grid .numbers {
+  overflow: hidden;
+  gap: 0 !important;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: #fff;
+  box-shadow: none;
+}
+.home-overview-grid .numbers > div {
+  min-height: 132px;
+  padding: 20px 14px !important;
+  border: 0 !important;
+  border-right: 1px solid var(--fvs-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.home-overview-grid .numbers > div:last-child {
+  border-right: 0 !important;
+}
+.home-overview-grid .numbers strong {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Keep each card family on a predictable desktop grid. */
+.public-field-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.public-project-grid,
+.study-card-grid,
+.organization-card-grid,
+.research-project-grid,
+.research-environment-grid,
+.ethics-desk-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.research-area-grid,
+.contact-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ethics-card-grid--four,
+.recruit-position-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.researcher-directory { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* Chronological and bibliographic content stays flat and scan-friendly. */
+:is(.compact-news, .news-list, .results-table, .publication-panel, .partner-list) {
+  overflow: hidden;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: #fff;
+  box-shadow: none !important;
+}
+:is(.compact-news, .news-list) > article,
+.partner-list > div {
+  min-height: 52px;
+  margin: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--fvs-line) !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+:is(.compact-news, .news-list) > article:last-child,
+.partner-list > div:last-child {
+  border-bottom: 0 !important;
+}
+:is(.compact-news, .news-list) > article:hover {
+  background: #f7fafd !important;
+}
+.results-table,
+.publication-panel {
+  padding: 0 !important;
+}
+.results-table table,
+.publication-panel table {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Timelines are records, not cards. */
+.timeline {
+  border-top: 1px solid var(--fvs-line);
+  border-bottom: 1px solid var(--fvs-line);
+}
+.timeline > div {
+  margin: 0 !important;
+  border-bottom: 1px solid var(--fvs-line);
+  background: transparent;
+}
+.timeline > div:last-child {
+  border-bottom: 0;
+}
+
+/* All process diagrams share one restrained workflow treatment. */
+:is(.stack--steps, .ethics-process, .recruit-flow) {
+  position: relative;
+  display: grid;
+  gap: 0 !important;
+  overflow: hidden;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: #fff;
+}
+.stack--steps { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.ethics-process,
+.recruit-flow { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+:is(.stack--steps, .ethics-process, .recruit-flow) > article {
+  position: relative;
+  min-height: 132px;
+  padding: 18px 16px !important;
+  border: 0 !important;
+  border-right: 1px solid var(--fvs-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+:is(.stack--steps, .ethics-process, .recruit-flow) > article:last-child {
+  border-right: 0 !important;
+}
+:is(.stack--steps, .ethics-process, .recruit-flow) .idx,
+.ethics-process > article > span,
+.recruit-flow .idx {
+  display: inline-grid;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+  place-items: center;
+  border: 1px solid #9db8d4;
+  border-radius: 50%;
+  background: #f2f7fb;
+  color: var(--fvs-blue);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Paired calls-to-action share the same guidance-card language. */
+.cta-pair {
+  gap: 16px !important;
+}
+.cta-pair > article {
+  min-height: 176px;
+  padding: 22px 24px !important;
+  border: 1px solid var(--fvs-line) !important;
+  border-radius: var(--fvs-radius) !important;
+  background: linear-gradient(110deg, #fff 0%, #f5f9fc 100%) !important;
+  box-shadow: var(--fvs-shadow-soft) !important;
+}
+.cta-pair > article:last-child {
+  border-left: 1px solid var(--fvs-line) !important;
+}
+
+/* Dense cards: prevent repeated metadata from stretching the page. */
+.public-field-card {
+  min-height: 158px !important;
+}
+.public-field-card p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.researcher-directory > article {
+  min-height: 82px;
+}
+.researcher-directory p span {
+  display: block;
+  margin-top: 2px;
+  color: var(--fvs-muted);
+  font-size: 11px;
+}
+.study-card .def > div,
+.ended-study-card .def > div {
+  grid-template-columns: 96px minmax(0, 1fr);
+}
+
+/* Tables and definition lists */
+.def,
+.results-table table,
+.publication-panel table,
+.document-body table {
+  border-color: var(--fvs-line);
+}
+.def > div {
+  border-color: #dce6f0;
+}
+.def dt {
+  color: #284e76;
+  background: #f2f7fb;
+  font-weight: 600;
+}
+.def dd {
+  background: #fff;
+}
+table th {
+  color: #284e76;
+  background: #f2f7fb;
+  font-weight: 600;
+}
+table td,
+table th {
+  border-color: #dce6f0;
+}
+
+/* Actions */
+.button,
+.outline-button {
+  min-height: 42px;
+  padding: 10px 20px;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.button {
+  border-color: var(--fvs-navy);
+  background: var(--fvs-navy);
+}
+.button:hover {
+  background: #174e85;
+}
+.outline-button {
+  border-color: #7b9cbd;
+  color: #174e85;
+}
+.text-link {
+  color: #15589c;
+  font-size: 12px;
+  font-weight: 600;
+}
+.text-link::after {
+  margin-left: 8px;
+}
+
+/* Footer */
+.site-footer {
+  padding-block: 22px 18px;
+  background: linear-gradient(90deg, #082c58, #0e4378);
+}
+.footer-utility {
+  gap: 0;
+  justify-content: center;
+}
+.footer-utility a {
+  padding: 0 22px;
+  border-right: 1px solid rgba(255,255,255,.3);
+  color: #e3edf7;
+  font-size: 12px;
+}
+.footer-utility a:last-child {
+  border-right: 0;
+}
+.footer-bottom {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.2);
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .global-nav {
+    gap: 16px;
+  }
+  .global-nav > a,
+  .nav-item > a {
+    font-size: 12px;
+  }
+  main > :is(div, section):not(.hero) > .page-head,
+  main > .utility-view > .page-head {
+    min-height: 225px;
+  }
+  .public-field-grid,
+  .public-project-grid,
+  .study-card-grid,
+  .organization-card-grid,
+  .research-area-grid,
+  .research-project-grid,
+  .research-environment-grid,
+  .researcher-directory,
+  .ethics-card-grid--four,
+  .ethics-desk-grid,
+  .recruit-position-grid,
+  .contact-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .stack--steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .stack--steps > article:nth-child(3) {
+    border-right: 0 !important;
+  }
+  .stack--steps > article:nth-child(-n + 3) {
+    border-bottom: 1px solid var(--fvs-line) !important;
+  }
+}
+
+@media (max-width: 720px) {
+  html {
+    scroll-padding-top: 66px;
+  }
+  body {
+    font-size: 13px;
+  }
+  .shell,
+  .site-header .header-inner {
+    width: min(calc(100% - 30px), var(--fvs-layout-main));
+  }
+  .site-header {
+    min-height: var(--fvs-public-header-height-mobile);
+  }
+  .site-header .header-inner {
+    height: var(--fvs-public-header-height-mobile) !important;
+  }
+  .brand-logo,
+  .site-header .brand-logo {
+    width: 29px;
+    height: 29px;
+  }
+  .brand-ja,
+  .site-header .brand-ja {
+    font-size: 13px !important;
+  }
+  .brand-en,
+  .site-header .brand-en {
+    font-size: 6px !important;
+  }
+  .menu-button {
+    width: 38px;
+    height: 38px;
+  }
+  main > .view-hero,
+  main > :is(div, section):not(.hero) > .page-head,
+  main > .utility-view > .page-head {
+    min-height: var(--fvs-subpage-hero-height-mobile) !important;
+  }
+  main > .view-hero > .shell,
+  main > :is(div, section):not(.hero) > .page-head > .shell,
+  main > .utility-view > .page-head > .shell {
+    padding-block: 15px 17px !important;
+  }
+  main > .view-hero h1,
+  main > :is(div, section):not(.hero) > .page-head h1 {
+    margin-bottom: 6px !important;
+    font-size: 24px !important;
+  }
+  main > .view-hero p:last-child,
+  main > :is(div, section):not(.hero) > .page-head .page-lead {
+    max-width: 32em;
+    font-size: 11.5px !important;
+    line-height: 1.65 !important;
+  }
+  .page-directory {
+    min-height: 44px;
+    margin-bottom: 20px;
+  }
+  .page-directory a,
+  .page-directory button {
+    min-height: 44px;
+    padding: 7px 12px;
+    font-size: 11px;
+  }
+  :is(.public-field-grid, .public-project-grid, .study-card-grid,
+      .organization-card-grid, .research-area-grid, .research-project-grid,
+      .research-environment-grid, .researcher-directory, .ethics-card-grid,
+      .ethics-desk-grid, .recruit-position-grid, .contact-card-grid,
+      .stack--grid, .stack--grid3, .stack--steps, .ethics-process) {
+    gap: 12px !important;
+  }
+  :is(.public-field-card, .organization-card-grid > article,
+      .research-area-grid > article, .researcher-directory > article,
+      .ethics-card-grid > article, .ethics-desk-grid > article,
+      .recruit-position-grid > article, .stack--grid > article,
+      .stack--grid3 > article, .stack--steps > article,
+      .ethics-process > article) {
+    padding: var(--fvs-card-padding-mobile) !important;
+  }
+  :is(.project-card-body, .study-card .stack-body,
+      .research-project-grid > article > :not(img),
+      .research-environment-grid > article > :not(img)) {
+    padding: var(--fvs-card-padding-mobile) !important;
+  }
+  .contact-card {
+    min-height: 100px;
+    grid-template-columns: 38px minmax(0, 1fr) 14px;
+    gap: 12px;
+    padding: 15px var(--fvs-card-padding-mobile) !important;
+  }
+  .contact-card-icon {
+    width: 38px;
+    height: 38px;
+  }
+  main > :is(div, section):not(.hero) > .page-head,
+  main > .utility-view > .page-head {
+    min-height: 195px;
+  }
+  .page-head .shell {
+    padding-block: 19px 24px;
+  }
+  .breadcrumb {
+    margin-bottom: 11px;
+    font-size: 10px;
+  }
+  .page-head h1 {
+    margin: 3px 0 9px;
+    font-size: 27px;
+    letter-spacing: .055em;
+  }
+  .page-lead {
+    font-size: 12px;
+    line-height: 1.75;
+  }
+  .page-directory {
+    width: 100%;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+  .page-directory a {
+    min-height: 48px;
+    padding: 8px 9px;
+    font-size: 11px;
+  }
+  .block {
+    padding-block: var(--fvs-space-section-mobile);
+  }
+  .block-head {
+    margin-bottom: 16px;
+  }
+  .block-head h2,
+  .subhead {
+    font-size: 20px;
+  }
+  .block-lead {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .subhead {
+    margin: 24px 0 11px;
+  }
+  .button,
+  .outline-button {
+    min-height: 40px;
+  }
+  .footer-utility {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .footer-utility a {
+    padding: 7px 8px;
+    border-right: 0;
+    text-align: center;
+  }
+  .footer-bottom {
+    margin-top: 10px;
+  }
+
+  .home-overview-grid .numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .home-overview-grid .numbers > div {
+    min-height: 112px;
+    padding: 16px 10px !important;
+    border-right: 1px solid var(--fvs-line) !important;
+    border-bottom: 1px solid var(--fvs-line) !important;
+  }
+  .home-overview-grid .numbers > div:nth-child(2n) {
+    border-right: 0 !important;
+  }
+  .home-overview-grid .numbers > div:nth-last-child(-n + 2) {
+    border-bottom: 0 !important;
+  }
+
+  :is(.stack--steps, .ethics-process, .recruit-flow) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+  }
+  :is(.stack--steps, .ethics-process, .recruit-flow) > article {
+    min-height: 120px;
+    padding: 15px 13px !important;
+    border-right: 1px solid var(--fvs-line) !important;
+    border-bottom: 1px solid var(--fvs-line) !important;
+  }
+  :is(.stack--steps, .ethics-process, .recruit-flow) > article:nth-child(2n) {
+    border-right: 0 !important;
+  }
+  :is(.stack--steps, .ethics-process, .recruit-flow) > article:nth-child(odd) {
+    border-right: 1px solid var(--fvs-line) !important;
+  }
+  :is(.stack--steps, .recruit-flow) > article:last-child {
+    grid-column: 1 / -1;
+    min-height: 96px;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+  }
+  .ethics-process > article:nth-last-child(-n + 2) {
+    border-bottom: 0 !important;
+  }
+
+  :is(.compact-news, .news-list) > article {
+    min-height: 58px;
+  }
+  .public-field-grid,
+  .public-project-grid,
+  .study-card-grid,
+  .organization-card-grid,
+  .research-area-grid,
+  .research-project-grid,
+  .research-environment-grid,
+  .researcher-directory,
+  .ethics-card-grid--four,
+  .ethics-desk-grid,
+  .recruit-position-grid,
+  .contact-card-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .public-field-card {
+    min-height: 0 !important;
+    text-align: left !important;
+  }
+  #home-fields .public-field-card:last-child {
+    grid-column: auto !important;
+  }
+  .research-area-grid > article {
+    grid-template-columns: 38px minmax(0, 1fr) !important;
+  }
+  .research-area-icon {
+    display: none !important;
+  }
+  .research-area-index {
+    grid-row: 1;
+  }
+  .research-area-grid .stack-body {
+    grid-column: 2;
+  }
+  .research-area-grid .keyword-label {
+    display: none;
+  }
+  .research-area-grid .tag-list {
+    margin-top: 8px;
+  }
+  .publication-table-head {
+    display: none !important;
+  }
+  .publication-row {
+    min-width: 0 !important;
+    grid-template-columns: 92px minmax(0, 1fr) 18px !important;
+    gap: 5px 10px !important;
+    padding: 13px 12px !important;
+  }
+  .publication-row .publication-number {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .publication-row .publication-type {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .publication-row time {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .publication-row .publication-copy {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .publication-row .publication-department {
+    grid-column: 2;
+    grid-row: 3;
+    color: var(--fvs-muted);
+    font-size: 11px;
+  }
+  .publication-row .row-arrow {
+    grid-column: 3;
+    grid-row: 1 / span 3;
+    align-self: center;
+  }
+  .publication-archive-banner > div {
+    max-width: 100% !important;
+  }
+  .publication-archive-banner {
+    min-height: 0 !important;
+    padding: 22px 18px !important;
+    background-image: linear-gradient(90deg, rgba(247,250,254,.98), rgba(247,250,254,.9)) !important;
+  }
+  .cta-pair > article {
+    min-height: 0;
+    padding: 18px 16px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Research Archive / Safety Control
+   Public pages and internal systems share identity, not identical presentation. */
+.archive-app,
+.safety-app {
+  min-height: 100vh;
+  color: var(--fvs-prototype-text);
+  background: var(--fvs-control-surface);
+  font-size: 14px;
+}
+.archive-header,
+.control-header {
+  min-height: 72px;
+  padding-inline: max(24px, calc((100% - var(--fvs-layout-wide)) / 2));
+  border-color: var(--fvs-control-line);
+  box-shadow: 0 3px 12px rgba(19, 55, 93, .04);
+}
+.archive-header > a {
+  gap: 12px;
+}
+.archive-mark {
+  width: 38px;
+  height: 38px;
+}
+.archive-header b,
+.control-header b {
+  color: var(--fvs-navy);
+  font-size: 16px !important;
+  letter-spacing: .055em;
+}
+.archive-header strong,
+.control-header strong {
+  color: #1c486f;
+  font-size: 14px !important;
+}
+.archive-header small,
+.control-header span {
+  color: var(--fvs-muted);
+  font-size: 10px !important;
+}
+.archive-search {
+  padding: 30px max(24px, calc((100% - var(--fvs-layout-wide)) / 2));
+  background: linear-gradient(105deg, #fff 0%, #f5f9fc 100%);
+}
+.archive-search h1,
+.control-main > h1,
+.doc-header h1 {
+  color: var(--fvs-navy);
+  font-size: clamp(26px, 3vw, 32px) !important;
+}
+.archive-search input,
+.archive-search select,
+.archive-search button,
+.control-main input,
+.control-main button {
+  min-height: 42px;
+  border-radius: 2px;
+}
+.archive-search input,
+.archive-search select,
+.control-main input {
+  border-color: var(--fvs-control-line);
+  background: #fff;
+}
+.archive-search button,
+.control-main button:not(.back-link) {
+  border-color: var(--fvs-navy);
+  background: var(--fvs-navy);
+  color: #fff;
+}
+.archive-layout {
+  width: min(calc(100% - 48px), var(--fvs-layout-wide));
+  margin-inline: auto;
+}
+.archive-layout aside,
+.document-list,
+.document-view,
+.control-main > section,
+.control-main > article {
+  border-color: var(--fvs-control-line);
+  border-radius: var(--fvs-radius);
+  background: var(--fvs-control-panel);
+  box-shadow: var(--fvs-shadow-soft);
+}
+.document-list > button,
+.facts,
+.control-facts,
+.doc-body table {
+  border-color: var(--fvs-control-line);
+}
+.document-list > button:hover,
+.document-list > button:focus-visible {
+  background: var(--fvs-blue-soft);
+}
+.doc-body h2,
+.archive-layout aside h2,
+.control-main h2 {
+  color: var(--fvs-navy);
+}
+.doc-body table,
+.facts,
+.control-facts {
+  font-variant-numeric: tabular-nums;
+}
+.archive-app .site-footer,
+.safety-app .site-footer {
+  min-height: 64px;
+  padding: 18px 24px;
+  background: #0b315c;
+  color: rgba(255,255,255,.78);
+}
+.archive-app .fiction-note,
+.safety-app .fiction-note {
+  margin: 0 auto;
+  font-size: 11px;
+  line-height: 1.65;
+  text-align: center;
+}
+
+/* Error page uses the same typographic scale while remaining intentionally dark. */
+.not-found-panel {
+  border-radius: var(--fvs-radius);
+}
+.institution-brand img {
+  width: 38px;
+  height: 38px;
+}
+
+@media (max-width: 800px) {
+  .archive-header,
+  .control-header {
+    min-height: 64px;
+    padding: 10px 16px;
+  }
+  .archive-mark {
+    width: 32px;
+    height: 32px;
+  }
+  .archive-header b,
+  .control-header b {
+    font-size: 14px !important;
+  }
+  .archive-search {
+    padding: 22px 16px;
+  }
+  .archive-layout {
+    width: min(calc(100% - 24px), var(--fvs-layout-wide));
+  }
+}

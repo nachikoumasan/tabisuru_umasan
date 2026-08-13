@@ -1,0 +1,32 @@
+@charset "utf-8";
+/* FVS系ページ共通のブランド基礎値。各画面固有の配色とレイアウトは個別CSSで定義する。 */
+:root {
+  --fvs-font-sans: "BIZ UDPGothic", "Yu Gothic Medium", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  --fvs-font-sans-ui: "BIZ UDPGothic", "Yu Gothic UI", "Yu Gothic Medium", Meiryo, sans-serif;
+  --fvs-font-serif: YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "BIZ UDPMincho", serif;
+  --fvs-font-mono: "Cascadia Mono", Consolas, "BIZ UDGothic", monospace;
+
+  /* FVS全画面共通の文字階層 */
+  --fvs-type-body: 15px;
+  --fvs-type-small: 12px;
+  --fvs-type-card-title: 17px;
+  --fvs-type-section-title: 22px;
+  --fvs-type-page-title: 30px;
+
+  /* 公開サイト */
+  --fvs-public-navy: #0d2f56;
+  --fvs-public-heading: #16283d;
+  --fvs-public-text: #3d5266;
+  --fvs-public-line: #dae2ec;
+  --fvs-public-line-soft: #eaeff5;
+
+  /* Research Archive / Safety Control */
+  --fvs-prototype-navy: #153b63;
+  --fvs-prototype-text: #223548;
+  --fvs-prototype-line: #cbd7e2;
+
+  /* 404など暗色画面 */
+  --fvs-inverse-accent: #6c9dc7;
+  --fvs-inverse-text: #eef1f4;
+  --fvs-inverse-line: #2b3137;
+}

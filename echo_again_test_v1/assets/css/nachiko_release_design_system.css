@@ -1,0 +1,114 @@
+/*
+ * Nachikoリリース／キャンペーンページの共通デザイン層。
+ * 既存の特設ページを基準に、ブランド色、幅、面、余白、操作部品を集約する。
+ */
+:root {
+  --nachiko-bg: #071225;
+  --nachiko-bg-deep: #040b18;
+  --nachiko-surface: rgba(13, 26, 48, .88);
+  --nachiko-surface-soft: rgba(255, 255, 255, .035);
+  --nachiko-text: #f5f1f6;
+  --nachiko-muted: #b9b4c5;
+  --nachiko-pink: #c873b8;
+  --nachiko-pink-bright: #e1a0d4;
+  --nachiko-gold: #d9b884;
+  --nachiko-line: rgba(221, 204, 226, .18);
+  --nachiko-content-width: 1120px;
+  --nachiko-page-gutter: 20px;
+  --nachiko-section-space: 24px;
+  --nachiko-section-padding-x: 34px;
+  --nachiko-section-padding-y: 27px;
+  --nachiko-panel-shadow: 0 14px 36px rgba(0, 0, 0, .18);
+  --nachiko-cover-shadow: 0 24px 52px rgba(0, 0, 0, .42);
+
+  /* 旧スタイルとの互換エイリアス。 */
+  --bg: var(--nachiko-bg);
+  --text: var(--nachiko-text);
+  --muted: var(--nachiko-muted);
+  --pink: var(--nachiko-pink);
+  --gold: var(--nachiko-gold);
+  --line: var(--nachiko-line);
+  --max: var(--nachiko-content-width);
+}
+
+html { background: var(--nachiko-bg); }
+body { color: var(--nachiko-text); }
+
+.release-hero,
+.campaign-feature,
+.content-section,
+.campaign-notes {
+  width: min(calc(100% - (var(--nachiko-page-gutter) * 2)), var(--nachiko-content-width));
+}
+
+.release-copy h1 {
+  font-size: clamp(2.65rem, 5.4vw, 4.8rem);
+  line-height: .95;
+  white-space: nowrap;
+}
+
+.release-cover { box-shadow: var(--nachiko-cover-shadow); }
+
+.campaign-feature,
+.content-section,
+.campaign-notes {
+  border-color: var(--nachiko-line);
+  box-shadow: var(--nachiko-panel-shadow);
+}
+
+.content-section,
+.campaign-notes {
+  margin-bottom: var(--nachiko-section-space);
+  padding: var(--nachiko-section-padding-y) var(--nachiko-section-padding-x);
+  background: var(--nachiko-surface);
+}
+
+.song-card,
+.step-list li { background: var(--nachiko-surface-soft); }
+.song-card p,
+.step-list p,
+.campaign-feature-copy > p:not(.eyebrow) { color: var(--nachiko-muted); }
+.eyebrow,
+.section-heading > p,
+.song-card small { color: var(--nachiko-pink); }
+.campaign-feature dt { color: var(--nachiko-gold); }
+.bonus-note b { color: var(--nachiko-pink-bright); }
+
+.campaign-play,
+.campaign-mute,
+.campaign-seek,
+.campaign-volume { touch-action: manipulation; }
+
+.campaign-play:focus-visible,
+.campaign-mute:focus-visible,
+.campaign-seek:focus-visible,
+.campaign-volume:focus-visible {
+  outline: 2px solid var(--nachiko-pink-bright);
+  outline-offset: 3px;
+}
+
+.campaign-foot { background: var(--nachiko-bg-deep); }
+
+@media (max-width: 820px) {
+  :root {
+    --nachiko-section-padding-x: 28px;
+    --nachiko-section-padding-y: 25px;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --nachiko-page-gutter: 12px;
+    --nachiko-section-padding-x: 17px;
+    --nachiko-section-padding-y: 22px;
+  }
+  .release-copy h1 { font-size: clamp(2.15rem, 10vw, 3rem); }
+  .campaign-player { min-width: 0; }
+  .song-copy { min-width: 0; }
+  .song-card h3,
+  .song-card p { overflow-wrap: anywhere; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

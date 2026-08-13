@@ -1,0 +1,1562 @@
+@charset "utf-8";
+/* ===========================================================
+   FVS public site — component layer
+   fvs_design_system.css の後に読み込む。
+   デザインシステムが定義した色・角丸・影・グリッド間隔の上に、
+   各コンポーネントの構造（配置・寸法）だけを定義する。
+   ブレークポイントは design system と同じ 900px / 720px に揃える。
+   =========================================================== */
+
+:root {
+  /* カード内の余白。全コンポーネントでこの2値のみを使う。 */
+  --fvs-pad-card: 20px;
+  --fvs-pad-card-sm: 16px;
+  /* 指標・アイコン等の識別色。ネイビー〜ブルーの同系ランプで統一する。 */
+  --fvs-ramp-1: #14508a;
+  --fvs-ramp-2: #1a6aa4;
+  --fvs-ramp-3: #2483b3;
+  --fvs-ramp-4: #3d97b4;
+  --fvs-ramp-5: #5aa8ad;
+  --fvs-ramp-6: #2b6f96;
+}
+
+/* -----------------------------------------------------------
+   ページ見出しの統一
+   HTMLに page-head を持つページと、JSが view-hero を差し込むページ
+   （お知らせ・お知らせ詳細）で、帯の高さも見出しサイズも違っていた。
+   view-hero を page-head と同一の見た目に揃える。
+   ----------------------------------------------------------- */
+main > .view-hero {
+  display: flex;
+  align-items: center;
+  min-height: 242px;
+  padding: 0;
+  border-bottom: 1px solid rgba(29, 87, 145, 0.12);
+  background: var(--tint);
+}
+main > .view-hero > .shell {
+  padding-block: 26px 32px;
+}
+main > .view-hero h1 {
+  margin: 5px 0 15px !important;
+  color: var(--fvs-navy);
+  font-size: clamp(30px, 3.5vw, 42px) !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.08em;
+}
+main > .view-hero p:last-child {
+  max-width: 650px;
+  margin: 0 !important;
+  color: #36526d;
+  font-size: 14px !important;
+  line-height: 1.9 !important;
+}
+
+/* -----------------------------------------------------------
+   見出し階層
+   design system では .block-head h2 と .subhead が同サイズのため、
+   セクション見出しと小見出しが同格に見える。1段階下げて階層を作る。
+   ----------------------------------------------------------- */
+.subhead {
+  margin: 30px 0 13px;
+  font-size: 18px !important;
+  letter-spacing: 0.05em;
+}
+.subhead::before {
+  display: inline-block;
+  width: 3px;
+  height: 15px;
+  margin-right: 10px;
+  border-radius: 2px;
+  background: var(--fvs-blue);
+  vertical-align: -2px;
+  content: "";
+}
+
+/* -----------------------------------------------------------
+   共通プリミティブ
+   ----------------------------------------------------------- */
+
+/* カード本体：枠・角丸・影はデザインシステム側。余白と地色だけ与える。 */
+.research-area-grid > article,
+.research-project-grid > article,
+.research-environment-grid > article,
+.study-card,
+.organization-card-grid > article,
+.ethics-card-grid > article,
+.ethics-desk-grid article,
+.recruit-position-grid article,
+.contact-card,
+.publication-count,
+.ethics-process > article,
+.recruit-flow > article,
+.public-field-card,
+.public-project-card {
+  border: 1px solid var(--fvs-line);
+  background: #fff;
+}
+
+/* カード内の画像は比率を固定し、カード幅いっぱいに敷く。 */
+.research-project-grid > article > img,
+.research-environment-grid > article > img,
+.study-card-media img,
+.ended-study-card > img,
+.public-project-card .project-image,
+.news-featured-image img,
+.institute-building img,
+.recruit-conditions img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 番号ラベル（01/02…）の見た目を全ページで統一する。 */
+.research-area-index,
+.ethics-card-grid > article > span,
+.ethics-process > article > span,
+.publication-count > span,
+.stack--steps .idx,
+.recruit-flow .idx,
+.organization-card-grid .idx {
+  color: var(--fvs-blue);
+  font:
+    700 11px/1.6 Arial,
+    sans-serif;
+  letter-spacing: 0.14em;
+}
+
+/* 円形アイコン枠。研究分野・窓口・倫理などで共通。 */
+.research-area-icon,
+.ethics-symbol,
+.ethics-desk-grid article > span,
+.contact-card-icon,
+.position-mark,
+.contact-support-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--fvs-blue-soft);
+  color: var(--fvs-blue);
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* 見出しの右にリンクを置くパターン（TOPの各セクション）。
+   about/contact の *-section-head はリンクを持たない通常の見出しなので、
+   横並びにはせず block-head の既定表示のままにする。 */
+.home-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px 24px;
+}
+.home-section-head > div {
+  margin-top: 0;
+}
+.home-section-head .text-link {
+  padding-bottom: 4px;
+  white-space: nowrap;
+}
+
+/* -----------------------------------------------------------
+   TOP
+   ----------------------------------------------------------- */
+
+.home-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: 28px 40px;
+  align-items: center;
+}
+.home-overview-copy .block-head {
+  margin-bottom: 14px;
+}
+.home-overview-copy .block-lead {
+  max-width: none;
+}
+
+/* 指標：2×2。ラベル・単位・補足の3階層を持つ。 */
+.home-overview-grid .numbers {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: var(--fvs-shadow-soft);
+}
+.numbers > div {
+  position: relative;
+  padding: 18px 16px 16px;
+  text-align: left;
+  border-right: 1px solid var(--fvs-line);
+  border-bottom: 1px solid var(--fvs-line);
+}
+.home-overview-grid .numbers > div:nth-child(2n) {
+  border-right: 0;
+}
+.home-overview-grid .numbers > div:nth-child(n + 3) {
+  border-bottom: 0;
+}
+.numbers > div::before {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  width: 3px;
+  height: 22px;
+  background: var(--fvs-ramp-1);
+  content: "";
+}
+.metric-partner::before {
+  background: var(--fvs-ramp-2);
+}
+.metric-people::before {
+  background: var(--fvs-ramp-3);
+}
+.metric-audio::before {
+  background: var(--fvs-ramp-4);
+}
+.numbers strong {
+  display: block;
+  color: var(--fvs-navy);
+  font: 600 27px/1.25 var(--fvs-font-serif);
+  letter-spacing: 0.02em;
+}
+.numbers strong small {
+  margin-left: 3px;
+  font-size: 13px;
+  font-weight: 400;
+}
+.numbers > div > span {
+  display: block;
+  margin-top: 5px;
+  color: #24486d;
+  font-size: 12px;
+  font-weight: 600;
+}
+.numbers > div > small {
+  display: block;
+  margin-top: 2px;
+  color: var(--fvs-muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* 研究分野カード（TOP・JS生成） */
+.public-field-grid {
+  grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
+}
+.public-field-card {
+  position: relative;
+  padding: var(--fvs-pad-card);
+  padding-left: calc(var(--fvs-pad-card) + 6px);
+}
+.public-field-card::before {
+  position: absolute;
+  top: var(--fvs-pad-card);
+  bottom: var(--fvs-pad-card);
+  left: 0;
+  width: 3px;
+  border-radius: var(--fvs-radius) 0 0 var(--fvs-radius);
+  background: var(--fvs-ramp-1);
+  content: "";
+}
+.field-2::before {
+  background: var(--fvs-ramp-2);
+}
+.field-3::before {
+  background: var(--fvs-ramp-3);
+}
+.field-4::before {
+  background: var(--fvs-ramp-4);
+}
+.field-5::before {
+  background: var(--fvs-ramp-5);
+}
+.public-field-card h3 {
+  margin-bottom: 7px;
+  font-size: 16px;
+}
+.public-field-card p {
+  color: var(--fvs-copy);
+  font-size: 13px;
+}
+
+/* 研究プロジェクトカード（TOP・JS生成） */
+.public-project-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.public-project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.public-project-card .project-image {
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+.project-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--fvs-pad-card);
+}
+.public-project-card .status {
+  margin-bottom: 9px;
+  padding: 3px 10px;
+  border-radius: 2px;
+  background: var(--fvs-blue-soft);
+  color: #17537f;
+  font-size: 11px;
+  font-weight: 600;
+}
+.public-project-card h3 {
+  margin-bottom: 7px;
+  font-size: 16px;
+}
+.public-project-card p {
+  margin-bottom: 0;
+  font-size: 13px;
+}
+.public-project-card dl {
+  gap: 3px 12px;
+  width: 100%;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--fvs-line);
+  font-size: 12px;
+}
+.project-more {
+  margin-top: auto;
+  padding-top: 13px;
+  color: #15589c;
+  font-size: 12px;
+  font-weight: 600;
+}
+.project-more::after {
+  margin-left: 7px;
+  content: "›";
+}
+
+/* -----------------------------------------------------------
+   研究所について
+   ----------------------------------------------------------- */
+
+.institute-profile-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: 26px 34px;
+  align-items: stretch;
+}
+.institute-building {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  box-shadow: var(--fvs-shadow-soft);
+}
+.institute-building img {
+  min-height: 230px;
+}
+
+.philosophy-panel {
+  padding: 26px 30px;
+  border-left-width: 4px;
+  border-radius: 0 var(--fvs-radius) var(--fvs-radius) 0;
+  background: linear-gradient(90deg, #eef5fc, #f7fafd);
+}
+.philosophy-panel strong {
+  margin-bottom: 12px;
+  font-family: var(--fvs-font-serif);
+  font-size: 19px;
+  line-height: 1.6;
+}
+.philosophy-panel p {
+  max-width: 62em;
+  font-size: 13px;
+}
+
+/* 所長挨拶：写真・本文・署名 */
+.director-panel {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 6px 34px;
+  align-items: start;
+}
+.director-panel .stack-key {
+  grid-row: 1 / span 2;
+}
+.director-panel .director-photo {
+  width: 100%;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+}
+.director-panel .stack-body > * + * {
+  margin-top: 12px;
+}
+.director-panel .stack-body p {
+  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 1.95;
+}
+.director-sign {
+  margin: 16px 0 0;
+  padding-top: 13px;
+  border-top: 1px solid var(--fvs-line);
+  text-align: right;
+}
+.director-name {
+  font-family: var(--fvs-font-serif);
+  font-size: 16px;
+}
+
+/* 組織：部門カード */
+.org-units {
+  gap: var(--fvs-space-grid);
+}
+.org-units > div {
+  grid-template-columns: minmax(0, 1fr) 190px;
+  align-items: center;
+  padding: 15px 18px;
+  border: 1px solid var(--fvs-line);
+  border-left: 3px solid var(--fvs-ramp-2);
+  border-radius: 0 var(--fvs-radius) var(--fvs-radius) 0;
+  background: #fff;
+  box-shadow: var(--fvs-shadow-soft);
+}
+.org-units > div.review {
+  border-left-color: #8fa8bf;
+}
+.org-units h3 {
+  grid-column: 1;
+  font-size: 15px;
+}
+.org-units p {
+  grid-column: 1;
+  color: var(--fvs-muted);
+  font-size: 12.5px;
+}
+.org-units .lead-name {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  text-align: right;
+  font-size: 12px;
+}
+
+.researcher-directory {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  border-top: 0;
+}
+.researcher-directory article {
+  align-items: center;
+  gap: 14px;
+  padding: 15px 17px;
+  border: 1px solid var(--fvs-line);
+  background: #fff;
+}
+.researcher-initial {
+  width: 42px;
+  height: 42px;
+  background: var(--fvs-blue-soft);
+  color: var(--fvs-ramp-1);
+  font-size: 18px;
+}
+.researcher-2 {
+  color: var(--fvs-ramp-2);
+}
+.researcher-3 {
+  color: var(--fvs-ramp-3);
+}
+.researcher-4 {
+  color: var(--fvs-ramp-4);
+}
+.researcher-5 {
+  color: var(--fvs-ramp-5);
+}
+.researcher-6 {
+  color: var(--fvs-ramp-6);
+}
+.researcher-directory h4 {
+  margin: 0 0 3px;
+  font-size: 15px;
+}
+.researcher-directory p {
+  margin: 0;
+  color: var(--fvs-muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.about-timeline > div {
+  grid-template-columns: 96px minmax(0, 1fr);
+  padding: 13px 4px;
+  border-color: var(--fvs-line);
+}
+.about-timeline time {
+  color: var(--fvs-blue);
+  font:
+    700 14px Arial,
+    sans-serif;
+}
+.about-timeline p {
+  font-size: 13.5px;
+}
+
+/* -----------------------------------------------------------
+   研究分野
+   ----------------------------------------------------------- */
+
+.research-area-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.research-area-grid > article {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 13px 13px;
+  padding: var(--fvs-pad-card);
+}
+.research-area-icon {
+  grid-area: 1 / 1;
+  width: 40px;
+  height: 40px;
+}
+.research-area-index {
+  grid-area: 1 / 2;
+  align-self: center;
+}
+.research-area-grid .stack-body {
+  grid-area: 2 / 1 / 3 / 3;
+}
+.research-area-grid h3 {
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+.research-area-grid .stack-sub {
+  margin: 0 0 9px;
+  color: #24486d;
+  font-family: var(--fvs-font-serif);
+  font-size: 13.5px;
+}
+.research-area-grid p {
+  margin-bottom: 0;
+  font-size: 13px;
+}
+.keyword-label {
+  margin: 14px 0 0;
+  color: var(--fvs-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+.research-area-grid .tag-list {
+  margin-top: 6px;
+}
+.tag-list li {
+  padding: 2px 9px;
+  border-color: var(--fvs-line);
+  background: var(--fvs-blue-soft);
+  color: #17537f;
+  font-size: 11px;
+}
+
+.research-project-grid,
+.research-environment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.research-project-grid > article,
+.research-environment-grid > article {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.research-project-grid > article > img,
+.research-environment-grid > article > img {
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+.research-project-grid .stack-body,
+.research-environment-grid .stack-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--fvs-pad-card);
+}
+.research-project-grid h3,
+.research-environment-grid h3 {
+  margin-bottom: 7px;
+  font-size: 16px;
+}
+.research-project-grid .stack-sub {
+  margin: 0 0 8px;
+  color: #24486d;
+  font-family: var(--fvs-font-serif);
+  font-size: 13px;
+}
+.research-project-grid p,
+.research-environment-grid p {
+  margin-bottom: 0;
+  font-size: 13px;
+}
+.research-project-grid .def {
+  width: 100%;
+}
+.research-project-grid .def > div {
+  grid-template-columns: 84px minmax(0, 1fr);
+}
+.research-project-grid .def :is(dt, dd) {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.research-project-grid .text-link {
+  margin-top: 12px;
+}
+.echo-project {
+  border-color: #a9c8e6 !important;
+  box-shadow: 0 8px 24px rgba(18, 58, 102, 0.11) !important;
+}
+.environment-stat {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px !important;
+}
+.environment-stat span {
+  padding: 3px 10px;
+  border-radius: 2px;
+  background: var(--fvs-blue-soft);
+  color: #17537f;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* -----------------------------------------------------------
+   成果・刊行物
+   ----------------------------------------------------------- */
+
+.publication-count-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin-top: 24px;
+}
+.publication-count {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 18px;
+}
+.publication-count > span {
+  width: 4px;
+  height: 34px;
+  border-radius: 2px;
+  background: var(--fvs-ramp-1);
+}
+.count-report > span {
+  background: var(--fvs-ramp-2);
+}
+.count-technical > span {
+  background: var(--fvs-ramp-3);
+}
+.count-data > span {
+  background: var(--fvs-ramp-4);
+}
+.publication-count h3 {
+  margin: 0 0 1px;
+  color: var(--fvs-muted);
+  font-size: 12px;
+}
+.publication-count strong {
+  color: var(--fvs-navy);
+  font: 600 23px/1.2 var(--fvs-font-serif);
+}
+.publication-count strong small {
+  margin-left: 3px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.publication-archive-banner {
+  padding: 30px 34px;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: linear-gradient(120deg, #f2f7fc, #fbfdfe);
+  box-shadow: var(--fvs-shadow-soft);
+}
+.publication-archive-banner h2 {
+  margin: 3px 0 10px;
+  color: var(--fvs-navy);
+  font-size: clamp(20px, 2vw, 24px);
+  letter-spacing: 0.055em;
+}
+.publication-archive-banner p {
+  max-width: 62em;
+  font-size: 13px;
+}
+.publication-archive-banner .button {
+  margin-top: 6px;
+}
+
+/* -----------------------------------------------------------
+   共同研究・研究参加
+   ----------------------------------------------------------- */
+
+.study-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.study-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.study-card-media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+}
+.study-card-media span {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 11px;
+  border-radius: 2px;
+  background: rgba(13, 49, 92, 0.9);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+}
+.study-card .stack-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: var(--fvs-pad-card);
+}
+.study-card h3 {
+  margin-bottom: 7px;
+  font-size: 16px;
+}
+.study-card p {
+  font-size: 13px;
+}
+.study-card .def > div {
+  grid-template-columns: 84px minmax(0, 1fr);
+}
+.study-card .def :is(dt, dd) {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+/* 手順（研究参加の流れ／連携までの流れ） */
+.stack--steps {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--fvs-space-grid);
+}
+.stack--steps > article {
+  padding: 16px 17px;
+  border-radius: var(--fvs-radius);
+  box-shadow: var(--fvs-shadow-soft);
+}
+.stack--steps h3 {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+.stack--steps p {
+  margin-bottom: 0;
+  color: var(--fvs-muted);
+  font-size: 12.5px;
+}
+
+.participant-rights {
+  padding: 22px 26px;
+  border-left-width: 4px;
+  border-radius: 0 var(--fvs-radius) var(--fvs-radius) 0;
+}
+.participant-rights p {
+  font-size: 13px;
+}
+
+/* 募集終了：横並びの1枚もの */
+.ended-study-card {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: #fff;
+  box-shadow: var(--fvs-shadow-soft);
+}
+.ended-study-card > img {
+  height: 100%;
+  min-height: 100%;
+}
+.ended-study-card article {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 0 16px;
+  padding: var(--fvs-pad-card);
+  border: 0;
+}
+.ended-study-card .idx {
+  padding: 2px 0;
+  border: 1px solid var(--fvs-line);
+  border-radius: 2px;
+  background: #f2f6fa;
+  color: var(--fvs-muted);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.ended-study-card h3 {
+  margin-bottom: 5px;
+  font-size: 17px;
+}
+.ended-study-card .stack-sub {
+  margin: 0 0 10px;
+  color: #24486d;
+  font-family: var(--fvs-font-serif);
+  font-size: 13.5px;
+}
+.ended-study-card p {
+  font-size: 13px;
+}
+.identity-notice {
+  margin: 10px 0 0 !important;
+  padding: 8px 12px;
+  border-left: 3px solid #9a6a4a;
+  background: #fbf5f0;
+  color: #7c4f33;
+  font-size: 12px;
+}
+.ended-study-card .def > div {
+  grid-template-columns: 150px minmax(0, 1fr);
+}
+.ended-study-card .def :is(dt, dd) {
+  padding: 6px 11px;
+  font-size: 12px;
+}
+
+.organization-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.organization-card-grid > article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding: var(--fvs-pad-card);
+}
+.organization-card-grid h3 {
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+.organization-card-grid p {
+  font-size: 13px;
+}
+.desk {
+  margin-top: 13px;
+  padding-top: 11px;
+  border-top: 1px dashed var(--fvs-line);
+  color: var(--fvs-muted);
+  font-size: 12px;
+}
+
+.partner-list {
+  border-color: var(--fvs-line);
+}
+.partner-list > div {
+  padding: 12px 17px;
+  border-color: var(--fvs-line);
+  font-size: 13px;
+}
+
+/* -----------------------------------------------------------
+   お知らせ
+   ----------------------------------------------------------- */
+
+.news-featured {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  overflow: hidden;
+  margin-bottom: 26px;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: #fff;
+  box-shadow: var(--fvs-shadow-soft);
+}
+.news-featured-image {
+  position: relative;
+  aspect-ratio: 16 / 9;
+}
+.news-featured-image span {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 12px;
+  border-radius: 2px;
+  background: rgba(13, 49, 92, 0.9);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+}
+.news-featured-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 26px 30px;
+}
+.news-featured-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 9px;
+}
+.news-featured-meta time {
+  color: var(--fvs-muted);
+  font:
+    12px Arial,
+    sans-serif;
+}
+.news-featured-meta span {
+  padding: 2px 10px;
+  border: 1px solid var(--fvs-line);
+  border-radius: 2px;
+  background: var(--fvs-blue-soft);
+  color: #17537f;
+  font-size: 11px;
+}
+.news-featured-body h2 {
+  margin-bottom: 9px;
+  color: var(--fvs-navy);
+  font-size: 20px !important;
+  line-height: 1.55;
+}
+.news-featured-body p {
+  color: var(--fvs-copy);
+  font-size: 13px;
+}
+
+.news-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.news-filter button {
+  padding: 7px 16px;
+  border: 1px solid var(--fvs-line);
+  border-radius: 999px;
+  background: #fff;
+  color: #2c5478;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+.news-filter button:hover {
+  border-color: #9dc0dd;
+  background: var(--fvs-blue-soft);
+}
+.news-filter button.is-current {
+  border-color: var(--fvs-navy);
+  background: var(--fvs-navy);
+  color: #fff;
+}
+
+.news-list {
+  border-color: var(--fvs-line);
+}
+.news-list article {
+  border-color: var(--fvs-line);
+}
+.news-list > article > span {
+  border-color: var(--fvs-line);
+  background: var(--fvs-blue-soft);
+  color: #17537f;
+}
+
+.news-subscription {
+  margin-top: 26px;
+  padding: 24px 28px;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: linear-gradient(120deg, #f2f7fc, #fbfdfe);
+}
+.news-subscription h2 {
+  margin: 3px 0 8px;
+  color: var(--fvs-navy);
+  font-size: 19px !important;
+  letter-spacing: 0.05em;
+}
+.news-subscription p {
+  font-size: 13px;
+}
+.news-subscription .outline-button {
+  margin-top: 4px;
+}
+
+/* -----------------------------------------------------------
+   研究倫理・安全
+   ----------------------------------------------------------- */
+
+.ethics-intro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--fvs-space-grid);
+}
+.ethics-intro-grid > article {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px 26px;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: #fff;
+  box-shadow: var(--fvs-shadow-soft);
+}
+.ethics-symbol {
+  width: 46px;
+  height: 46px;
+  font-size: 17px;
+}
+.ethics-symbol--people {
+  background: #e6f1ea;
+  color: #2f7050;
+}
+.ethics-intro-grid h2 {
+  margin: 3px 0 8px;
+  color: var(--fvs-navy);
+  font-size: 19px !important;
+  letter-spacing: 0.05em;
+}
+.ethics-intro-grid p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.ethics-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+.ethics-card-grid > article {
+  padding: var(--fvs-pad-card);
+}
+.ethics-card-grid h3 {
+  margin: 8px 0 6px;
+  color: var(--fvs-navy);
+  font-size: 15px;
+}
+.ethics-card-grid p {
+  margin: 0;
+  font-size: 12.5px;
+}
+
+/* 手順表示。カード間に矢印を置いて流れを示す。 */
+.ethics-process {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--fvs-space-grid);
+}
+.ethics-process > article {
+  position: relative;
+  padding: 17px 19px;
+  border-radius: var(--fvs-radius);
+  box-shadow: var(--fvs-shadow-soft);
+}
+.ethics-process h3 {
+  margin: 6px 0 5px;
+  color: var(--fvs-navy);
+  font-size: 14px;
+}
+.ethics-process p {
+  margin: 0;
+  color: var(--fvs-muted);
+  font-size: 12.5px;
+}
+
+.ethics-desk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.ethics-desk-grid article {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 15px;
+  padding: var(--fvs-pad-card);
+}
+.ethics-desk-grid article > span {
+  width: 42px;
+  height: 42px;
+  font-size: 15px;
+}
+.ethics-desk-grid h3 {
+  margin: 0 0 5px;
+  color: var(--fvs-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.ethics-desk-grid strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--fvs-navy);
+  font-size: 15px;
+  font-weight: 600;
+}
+.ethics-desk-grid p {
+  margin: 0;
+  font-size: 12.5px;
+}
+
+/* -----------------------------------------------------------
+   採用情報
+   ----------------------------------------------------------- */
+
+.recruit-position-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+.recruit-position-grid article {
+  padding: var(--fvs-pad-card);
+}
+.position-mark {
+  width: 38px;
+  height: 38px;
+  margin-bottom: 12px;
+  font:
+    700 15px/1 Arial,
+    sans-serif;
+}
+.recruit-position-grid article:nth-child(2) .position-mark {
+  color: var(--fvs-ramp-2);
+}
+.recruit-position-grid article:nth-child(3) .position-mark {
+  color: var(--fvs-ramp-3);
+}
+.recruit-position-grid article:nth-child(4) .position-mark {
+  color: var(--fvs-ramp-4);
+}
+.recruit-position-grid h3 {
+  margin-bottom: 7px;
+  color: var(--fvs-navy);
+  font-size: 16px;
+}
+.recruit-position-grid p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.recruit-flow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--fvs-space-grid);
+}
+.recruit-flow > article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  padding: 16px 18px;
+  border-radius: var(--fvs-radius);
+  box-shadow: var(--fvs-shadow-soft);
+}
+.recruit-flow h3 {
+  margin-bottom: 5px;
+  color: var(--fvs-navy);
+  font-size: 14px;
+}
+.recruit-flow p {
+  margin: 0;
+  color: var(--fvs-muted);
+  font-size: 12.5px;
+}
+
+.recruit-conditions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: 26px 34px;
+  align-items: stretch;
+}
+.recruit-conditions img {
+  min-height: 230px;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  box-shadow: var(--fvs-shadow-soft);
+}
+
+.recruit-contact-callout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 26px;
+  margin-top: 26px;
+  padding: 20px 26px;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: linear-gradient(120deg, #f2f7fc, #fbfdfe);
+}
+.recruit-contact-callout p {
+  max-width: 56em;
+  margin: 0;
+  font-size: 13px;
+}
+.recruit-contact-callout .button {
+  flex: none;
+}
+
+/* -----------------------------------------------------------
+   お問い合わせ
+   ----------------------------------------------------------- */
+
+.contact-section-head p:last-child,
+.about-section-head p:last-child {
+  margin: 7px 0 0;
+  color: var(--fvs-muted);
+  font-size: 13px;
+}
+
+.contact-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.contact-card {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 14px;
+  gap: 15px;
+  align-items: center;
+  padding: 18px var(--fvs-pad-card);
+}
+.contact-card-icon {
+  width: 42px;
+  height: 42px;
+  background: var(--fvs-blue-soft);
+}
+.contact-card-icon::before {
+  width: 15px;
+  height: 15px;
+  border: 2px solid currentcolor;
+  border-radius: 3px;
+  content: "";
+}
+.contact-card--participation .contact-card-icon {
+  color: var(--fvs-ramp-1);
+}
+.contact-card--collaboration .contact-card-icon {
+  color: var(--fvs-ramp-2);
+}
+.contact-card--facility .contact-card-icon {
+  color: var(--fvs-ramp-3);
+}
+.contact-card--ethics .contact-card-icon {
+  color: var(--fvs-ramp-4);
+}
+.contact-card--media .contact-card-icon {
+  color: var(--fvs-ramp-5);
+}
+.contact-card--general .contact-card-icon {
+  color: var(--fvs-ramp-6);
+}
+.contact-card--collaboration .contact-card-icon::before,
+.contact-card--media .contact-card-icon::before {
+  border-radius: 50%;
+}
+.contact-card--facility .contact-card-icon::before,
+.contact-card--general .contact-card-icon::before {
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+.contact-card h3 {
+  margin: 0 0 4px;
+  color: var(--fvs-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.contact-card strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--fvs-navy);
+  font-size: 15px;
+  font-weight: 600;
+}
+.contact-card p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.contact-card-arrow {
+  color: #9bb4cc;
+  font-size: 15px;
+}
+
+.contact-guidance {
+  padding: 26px 30px;
+  border: 1px solid var(--fvs-line);
+  border-radius: var(--fvs-radius);
+  background: #fff;
+  box-shadow: var(--fvs-shadow-soft);
+}
+.contact-guidance h2 {
+  margin: 3px 0 14px;
+  color: var(--fvs-navy);
+  font-size: 19px !important;
+  letter-spacing: 0.05em;
+}
+.contact-guidance dl {
+  display: grid;
+  gap: 0;
+}
+.contact-guidance dl > div {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 0 20px;
+  padding: 11px 0;
+  border-top: 1px solid var(--fvs-line);
+}
+.contact-guidance dl > div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.contact-guidance dt {
+  color: #284e76;
+  font-size: 13px;
+  font-weight: 600;
+}
+.contact-guidance dd {
+  margin: 0;
+  font-size: 13px;
+}
+
+.contact-unavailable {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 4px 15px;
+  align-items: center;
+  margin-top: var(--fvs-space-grid);
+  padding: 18px 24px;
+  border: 1px solid #d9e4ee;
+  border-left: 3px solid var(--fvs-ramp-2);
+  border-radius: 0 var(--fvs-radius) var(--fvs-radius) 0;
+  background: #f5f9fc;
+}
+.contact-support-icon {
+  grid-row: 1 / span 2;
+  width: 38px;
+  height: 38px;
+  background: #fff;
+}
+.contact-support-icon::before {
+  content: "?";
+  font-size: 16px;
+  font-weight: 700;
+}
+.contact-unavailable p {
+  margin: 0;
+  font-size: 13px;
+}
+.contact-unavailable strong {
+  color: var(--fvs-navy);
+  font-weight: 600;
+}
+.contact-unavailable > span {
+  color: var(--fvs-muted);
+  font-size: 12px;
+}
+
+/* -----------------------------------------------------------
+   公開資料一覧テーブル
+   JSの出力は「文書番号／種別／公開日／資料名／担当部門／矢印」の6セル。
+   fvs_site.css の7列指定のままだと列がずれるため、ここで6列に揃える。
+   ----------------------------------------------------------- */
+.publication-table-head,
+.publication-row {
+  grid-template-columns: 118px 86px 88px minmax(200px, 1fr) 132px 20px;
+  min-width: 760px;
+  padding: 11px 16px;
+}
+.results-table {
+  border-color: var(--fvs-line);
+  border-top: 2px solid var(--fvs-navy);
+  border-radius: var(--fvs-radius);
+}
+.publication-table-head {
+  background: #f2f7fb;
+  border-color: var(--fvs-line);
+}
+.publication-row {
+  border-color: #e6edf4;
+}
+.publication-type {
+  border-color: var(--fvs-line);
+  background: var(--fvs-blue-soft);
+  color: #17537f;
+}
+.publication-pagination button {
+  border-color: var(--fvs-line);
+  border-radius: 2px;
+  color: #174e85;
+}
+
+/* -----------------------------------------------------------
+   一覧の「もっと見る」
+   ----------------------------------------------------------- */
+
+.list-more {
+  margin-top: var(--fvs-space-grid);
+  text-align: center;
+}
+.list-more button {
+  min-height: 42px;
+  padding: 10px 26px;
+  border: 1px solid #7b9cbd;
+  border-radius: 2px;
+  background: #fff;
+  color: #174e85;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.list-more button:hover {
+  background: var(--fvs-blue-soft);
+}
+
+/* -----------------------------------------------------------
+   レスポンシブ
+   ----------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  main > .view-hero {
+    min-height: 225px;
+  }
+  .home-overview-grid,
+  .institute-profile-layout,
+  .recruit-conditions,
+  .news-featured {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .home-overview-grid .numbers > div:nth-child(n + 3) {
+    border-bottom: 1px solid var(--fvs-line);
+  }
+  .home-overview-grid .numbers > div:nth-child(n + 3) {
+    border-bottom: 0;
+  }
+  .director-panel {
+    grid-template-columns: 160px minmax(0, 1fr);
+  }
+  .ended-study-card {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+  .institute-building img,
+  .recruit-conditions img {
+    aspect-ratio: 21 / 9;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --fvs-pad-card: var(--fvs-pad-card-sm);
+  }
+  main > .view-hero {
+    min-height: 195px;
+  }
+  main > .view-hero > .shell {
+    padding-block: 19px 24px;
+  }
+  main > .view-hero h1 {
+    margin: 3px 0 9px !important;
+    font-size: 27px !important;
+    letter-spacing: 0.055em;
+  }
+  main > .view-hero p:last-child {
+    font-size: 12px !important;
+    line-height: 1.75 !important;
+  }
+  .home-overview-grid .numbers,
+  .numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .numbers > div:nth-child(2n) {
+    border-right: 0;
+  }
+  .numbers > div:nth-child(n + 3) {
+    border-bottom: 0;
+  }
+  .director-panel {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .director-panel .stack-key {
+    grid-row: auto;
+    max-width: 150px;
+  }
+  .director-sign {
+    text-align: left;
+  }
+  .org-units > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .org-units .lead-name {
+    grid-column: 1;
+    grid-row: auto;
+    text-align: left;
+  }
+  .ended-study-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ended-study-card > img {
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+  }
+  .ended-study-card article {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .ended-study-card .idx {
+    justify-self: start;
+    padding: 2px 14px;
+  }
+  .ended-study-card .def > div,
+  .research-project-grid .def > div,
+  .study-card .def > div {
+    grid-template-columns: 110px minmax(0, 1fr);
+  }
+  .contact-guidance dl > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3px;
+  }
+  .contact-guidance,
+  .news-featured-body,
+  .publication-archive-banner,
+  .news-subscription,
+  .philosophy-panel {
+    padding: 20px 22px;
+  }
+  .recruit-contact-callout {
+    padding: 18px 20px;
+  }
+  .contact-unavailable {
+    padding: 16px 18px;
+  }
+  .about-timeline > div {
+    grid-template-columns: 74px minmax(0, 1fr);
+  }
+  .subhead {
+    margin: 24px 0 11px;
+    font-size: 16px !important;
+  }
+  .home-section-head .text-link {
+    padding-bottom: 0;
+  }
+}
